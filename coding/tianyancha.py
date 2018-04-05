@@ -212,7 +212,7 @@ def main(logfile, company_file):
             m = m + 1
             if n > 2:
                 df = df.ix[:, cols]
-                df.to_csv(r'company_info.csv', encoding='gbk', mode='a')
+                df.to_csv(r'../data/company_info.csv', encoding='gbk', mode='a')
                 df = pd.DataFrame({})
                 n = 0
                 time.sleep(300)
@@ -250,10 +250,10 @@ def main(logfile, company_file):
     # df = df.ix[:, (df != df.ix[0]).any()]
     # 将爬取到的数据存储到硬盘上，存储格式为CSV
     df = df.ix[:, cols]
-    df.to_csv(r'company_info.csv', encoding='gbk', mode='a')
+    df.to_csv(r'../data/company_info.csv', encoding='gbk', mode='a')
 
 
 if __name__ == '__main__':
-    logfile = 'failed_log.txt'
-    filename = r'企业名称.xlsx'
+    logfile = '../data/failed_log.txt'
+    filename = r'../data/企业名称.xlsx'
     main(logfile, filename)

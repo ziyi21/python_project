@@ -94,9 +94,9 @@ def get_36k():
     url = 'http://36kr.com/newsflashes'
     driver.get(url)
     # 模拟js操作向下滑动窗口到最底部
-    driver.execute_script('window.scrollTo(0, 0.8*document.body.scrollHeight)')
+    driver.execute_script('window.scrollTo(0, document.body.scrollHeight*0.8)')
     time.sleep(3)
-    driver.execute_script('window.scrollTo(0, 0.8*document.body.scrollHeight)')
+    driver.execute_script('window.scrollTo(0, document.body.scrollHeight*0.8)')
     time.sleep(5)
     df = pd.DataFrame({})
     title_list = driver.find_elements_by_css_selector('.conter-wrapper .fast_section_list .sameday_list li')
@@ -123,15 +123,15 @@ def main():
         if os.path.isfile(filePath):
             os.remove(filePath)
             print(filePath + " was removed!")
-    df_btc = pd.DataFrame({})
-    btc = get_btc()
-    df_btc = df_btc.append(btc.copy())
-    df_btc.to_csv(r'hashtoutiao\btc_{}.csv'.format(now), encoding='gbk')
-
-    df_ped = pd.DataFrame({})
-    ped = get_pedaily()
-    df_ped = df_ped.append(ped.copy())
-    df_ped.to_csv(r'hashtoutiao\ped_{}.csv'.format(now), encoding='gbk')
+    # df_btc = pd.DataFrame({})
+    # btc = get_btc()
+    # df_btc = df_btc.append(btc.copy())
+    # df_btc.to_csv(r'hashtoutiao\btc_{}.csv'.format(now), encoding='gbk')
+    #
+    # df_ped = pd.DataFrame({})
+    # ped = get_pedaily()
+    # df_ped = df_ped.append(ped.copy())
+    # df_ped.to_csv(r'hashtoutiao\ped_{}.csv'.format(now), encoding='gbk')
 
     df_tsk = pd.DataFrame({})
     tsk = get_36k()
