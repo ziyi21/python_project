@@ -79,8 +79,8 @@ def get_pedaily():
 
 
 # 启动浏览器，executable_path路径要根据自己chromedriver.exe的位置更改
-# driver = webdriver.Chrome(executable_path=r'E:\EXE\EXE\chromedriver_win32\chromedriver')
-driver = webdriver.Chrome()
+driver = webdriver.Chrome(executable_path=r'D:\ksdler\chromedriver_win32_new\chromedriver')
+# driver = webdriver.Chrome()
 # 设置浏览器窗口位置及大小
 # driver.set_window_rect(x=0, y=0, width=667, height=748)
 # 设定页面加载限制时间
@@ -116,22 +116,23 @@ def get_36k():
 
 def main():
     now = time.strftime('%Y-%m-%d', time.localtime(time.time()))
-    delDir = "hashtoutiao/1"
+    delDir = "hashtoutiao"
     delList = os.listdir(delDir)
-    for f in delList:
-        filePath = os.path.join(delDir, f)
-        if os.path.isfile(filePath):
-            os.remove(filePath)
-            print(filePath + " was removed!")
-    # df_btc = pd.DataFrame({})
-    # btc = get_btc()
-    # df_btc = df_btc.append(btc.copy())
-    # df_btc.to_csv(r'hashtoutiao\btc_{}.csv'.format(now), encoding='gbk')
-    #
-    # df_ped = pd.DataFrame({})
-    # ped = get_pedaily()
-    # df_ped = df_ped.append(ped.copy())
-    # df_ped.to_csv(r'hashtoutiao\ped_{}.csv'.format(now), encoding='gbk')
+    print(delList)
+    # for f in delList:
+    #     filePath = os.path.join(delDir, f)
+    #     if os.path.isfile(filePath):
+    #         os.remove(filePath)
+    #         print(filePath + " was removed!")
+    df_btc = pd.DataFrame({})
+    btc = get_btc()
+    df_btc = df_btc.append(btc.copy())
+    df_btc.to_csv(r'hashtoutiao\btc_{}.csv'.format(now), encoding='gbk')
+
+    df_ped = pd.DataFrame({})
+    ped = get_pedaily()
+    df_ped = df_ped.append(ped.copy())
+    df_ped.to_csv(r'hashtoutiao\ped_{}.csv'.format(now), encoding='gbk')
 
     df_tsk = pd.DataFrame({})
     tsk = get_36k()
