@@ -100,9 +100,10 @@ def get_36k():
     time.sleep(5)
     df = pd.DataFrame({})
     title_list = driver.find_elements_by_css_selector('.conter-wrapper .fast_section_list .sameday_list li')
+    print(title_list)
     contents = {}
     for title in title_list:
-        # print(title)
+         # print(title)
         contents['title'] = title.find_element_by_css_selector('h2 span').text
         contents['content'] = title.find_element_by_css_selector('.fast_news_content span').text
         contents['url'] = title.find_element_by_css_selector('.fast_news_content a').get_attribute('href')
@@ -112,6 +113,49 @@ def get_36k():
         df = df.append(contents, ignore_index=True)
     driver.close()
     return df
+
+def jiemian():
+    content = {}
+    url = 'http://www.jiemian.com/'
+    driver.get(url)
+    driver.execute_script ('window.scrollTo(0, document.body.scrollHeight)')
+    time.sleep (5)
+    driver.execute_script ('window.scrollTo(document.body.scrollHeight,0)')
+    time.sleep (5)
+    # tianxia_list = driver.find_elements_by_css_selector('#centerAjax .columns-lists div')
+    # 依次获取每个新闻分类的数据列表集
+    tianxia_list = driver.find_elements_by_xpath('//*[@id="centerAjax"]/div[2]/div[@class="news-view "]')
+    china_list = driver.find_elements_by_xpath('//*[@id="centerAjax"]/div[4]/div[@class="news-view "]')
+    hongguan_list = driver.find_elements_by_xpath('//*[@id="centerAjax"]/div[6]/div[@class="news-view "]')
+
+    most_popular = driver.find_elements_by_xpath('//*[@id="centerAjax"]/div[8]/ul/li/a')
+    for popular_news in most_popular:
+        content['header'] = popular_news.text
+        content['url'] = popular_news.get_attribute('href')
+        print(content)
+    jmedia = driver.find_element_by_xpath('//*[@id="centerAjax"]/div[9]/div[1]/h3/a').text
+    print(jmedia)
+    jmedia_introduction = driver.find_element_by_xpath('//*[@id="jmediaAjax"]/div[1]/div[3]/p')
+
+    classes_name = ['天下','中国','宏观','most_popular','媒体']
+
+    news_list = [tianxia_list, china_list, hongguan_list]
+    # 抓取天下、中国、宏观三个板块的数据
+    for j,news_classes in enumerate(news_list):
+        print(j,news_classes)
+        for i, news in enumerate(news_classes):
+            content['header'] = news.find_element_by_xpath('//*[@id="centerAjax"]/div[{}]/div[{}]/div[2]/h3/a'.format(j*2+2,i+1)).text
+            content['news_url'] = news.find_element_by_xpath('//*[@id="centerAjax"]/div[{}]/div[{}]/div[2]/h3/a'.format(j*2+2,i+1)).get_attribute('href')
+            content['classes_name'] = classes_name[j]
+            print(content)
+    # 抓取最流行的新闻列表
+
+    return tianxia_list
+
+def save_info(now, contents, name):
+    df = pd.DataFrame()
+    df = df.append(contents.copy())
+    df.to_csv(r'hxtoutiao\{0}\{1}_{0}.csv'.format(now, name), encoding='gbk')
 
 
 def main():
@@ -124,20 +168,22 @@ def main():
     #     if os.path.isfile(filePath):
     #         os.remove(filePath)
     #         print(filePath + " was removed!")
-    df_btc = pd.DataFrame({})
-    btc = get_btc()
-    df_btc = df_btc.append(btc.copy())
-    df_btc.to_csv(r'hashtoutiao\btc_{}.csv'.format(now), encoding='gbk')
+    # df_btc = pd.DataFrame({})
+    # btc = get_btc()
+    # df_btc = df_btc.append(btc.copy())
+    # df_btc.to_csv(r'hashtoutiao\btc_{}.csv'.format(now), encoding='gbk')
+    #
+    # df_ped = pd.DataFrame({})
+    # ped = get_pedaily()
+    # df_ped = df_ped.append(ped.copy())
+    # df_ped.to_csv(r'hashtoutiao\ped_{}.csv'.format(now), encoding='gbk')
+    #
+    # df_tsk = pd.DataFrame({})
+    # tsk = get_36k()
+    # df_tsk = df_tsk.append(tsk.copy())
+    # df_tsk.to_csv(r'hashtoutiao\tsk_{}.csv'.format(now), encoding='gbk')
 
-    df_ped = pd.DataFrame({})
-    ped = get_pedaily()
-    df_ped = df_ped.append(ped.copy())
-    df_ped.to_csv(r'hashtoutiao\ped_{}.csv'.format(now), encoding='gbk')
-
-    df_tsk = pd.DataFrame({})
-    tsk = get_36k()
-    df_tsk = df_tsk.append(tsk.copy())
-    df_tsk.to_csv(r'hashtoutiao\tsk_{}.csv'.format(now), encoding='gbk')
+    jiemian()
 
 
 if __name__ == '__main__':
