@@ -116,46 +116,40 @@ def get_36k():
 
 def jiemian():
     content = {}
+    df = pd.DataFrame ({})
     url = 'http://www.jiemian.com/'
     driver.get(url)
     driver.execute_script ('window.scrollTo(0, document.body.scrollHeight)')
     time.sleep (5)
+    driver.execute_script ('window.scrollTo(0, document.body.scrollHeight)')
+    time.sleep (3)
     driver.execute_script ('window.scrollTo(document.body.scrollHeight,0)')
     time.sleep (5)
-    # tianxia_list = driver.find_elements_by_css_selector('#centerAjax .columns-lists div')
+
     # 依次获取每个新闻分类的数据列表集
-    tianxia_list = driver.find_elements_by_xpath('//*[@id="centerAjax"]/div[2]/div[@class="news-view "]')
-    china_list = driver.find_elements_by_xpath('//*[@id="centerAjax"]/div[4]/div[@class="news-view "]')
-    hongguan_list = driver.find_elements_by_xpath('//*[@id="centerAjax"]/div[6]/div[@class="news-view "]')
-
-    most_popular = driver.find_elements_by_xpath('//*[@id="centerAjax"]/div[8]/ul/li/a')
-    for popular_news in most_popular:
-        content['header'] = popular_news.text
-        content['url'] = popular_news.get_attribute('href')
-        print(content)
-    jmedia = driver.find_element_by_xpath('//*[@id="centerAjax"]/div[9]/div[1]/h3/a').text
-    print(jmedia)
-    jmedia_introduction = driver.find_element_by_xpath('//*[@id="jmediaAjax"]/div[1]/div[3]/p')
-
-    classes_name = ['天下','中国','宏观','most_popular','媒体']
-
-    news_list = [tianxia_list, china_list, hongguan_list]
-    # 抓取天下、中国、宏观三个板块的数据
-    for j,news_classes in enumerate(news_list):
-        print(j,news_classes)
-        for i, news in enumerate(news_classes):
-            content['header'] = news.find_element_by_xpath('//*[@id="centerAjax"]/div[{}]/div[{}]/div[2]/h3/a'.format(j*2+2,i+1)).text
-            content['news_url'] = news.find_element_by_xpath('//*[@id="centerAjax"]/div[{}]/div[{}]/div[2]/h3/a'.format(j*2+2,i+1)).get_attribute('href')
-            content['classes_name'] = classes_name[j]
+    tianxia_list = driver.find_elements_by_xpath ('//*[@id="centerAjax"]/div[2]/div[@class="news-view "]/div[@class="news-header"]/h3/a')
+    china_list = driver.find_elements_by_xpath ('//*[@id="centerAjax"]/div[4]/div[@class="news-view "]/div[@class="news-header"]/h3/a')
+    hongguan_list = driver.find_elements_by_xpath ('//*[@id="centerAjax"]/div[6]/div[@class="news-view "]/div[@class="news-header"]/h3/a')
+    most_popular = driver.find_elements_by_xpath ('//*[@id="centerAjax"]/div[8]/ul/li/a')
+    jmedia = driver.find_elements_by_xpath ('//*[@id="jmediaAjax"]/div[@class="media-news"]/div[@class="media-header"]/h3/a')
+    # jmedia_introduction = driver.find_elements_by_xpath('//*[@id="jmediaAjax"]/div[class="media-news"]/div[@class="media-main"]/p')
+    classes_name = ['天下', '中国', '宏观', '最热', '媒体']
+    news_list = [tianxia_list, china_list, hongguan_list,most_popular,jmedia]
+    for i,news_classes in enumerate(news_list):
+        print (i, classes_name[i])
+        for news in news_classes:
+            content['header'] = news.text
+            content['news_url'] = news.get_attribute('href')
+            content['classes_name'] = classes_name[i]
+            content['pubtime'] = time.strftime('%Y-%m-%d %H:%M:%S', time.localtime(time.time()))
             print(content)
-    # 抓取最流行的新闻列表
-
-    return tianxia_list
+            df = df.append (content, ignore_index=True)
+    return df
 
 def save_info(now, contents, name):
     df = pd.DataFrame()
     df = df.append(contents.copy())
-    df.to_csv(r'hxtoutiao\{0}\{1}_{0}.csv'.format(now, name), encoding='gbk')
+    df.to_csv(r'hashtoutiao\{0}\{1}_{0}.csv'.format(now, name), encoding='gbk')
 
 
 def main():
@@ -163,28 +157,26 @@ def main():
     delDir = "hashtoutiao"
     delList = os.listdir(delDir)
     print(delList)
+    if now not in delList:
+        os.mkdir ('hashtoutiao\{}'.format(now))
+
+    # btc = get_btc ()
+    # save_info (now, btc, 'btc')
+    #
+    # ped = get_pedaily ()
+    # save_info (now, ped, 'ped')
+    #
+    # tsk = get_36k ()
+    # save_info (now, tsk, '36k')
+
+    jm = jiemian()
+    save_info(now,jm,'jiemian')
+
     # for f in delList:
     #     filePath = os.path.join(delDir, f)
     #     if os.path.isfile(filePath):
     #         os.remove(filePath)
     #         print(filePath + " was removed!")
-    # df_btc = pd.DataFrame({})
-    # btc = get_btc()
-    # df_btc = df_btc.append(btc.copy())
-    # df_btc.to_csv(r'hashtoutiao\btc_{}.csv'.format(now), encoding='gbk')
-    #
-    # df_ped = pd.DataFrame({})
-    # ped = get_pedaily()
-    # df_ped = df_ped.append(ped.copy())
-    # df_ped.to_csv(r'hashtoutiao\ped_{}.csv'.format(now), encoding='gbk')
-    #
-    # df_tsk = pd.DataFrame({})
-    # tsk = get_36k()
-    # df_tsk = df_tsk.append(tsk.copy())
-    # df_tsk.to_csv(r'hashtoutiao\tsk_{}.csv'.format(now), encoding='gbk')
-
-    jiemian()
-
 
 if __name__ == '__main__':
     main()
