@@ -13,7 +13,6 @@ def getFile(url):
         buffer = u.read(block_sz)
         if not buffer:
             break
-
         f.write(buffer)
     f.close()
     print ("Sucessful to 'download" + " " + file_name)

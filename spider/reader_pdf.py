@@ -39,9 +39,9 @@ from pdfminer.pdfinterp import PDFTextExtractionNotAllowed
 '''
  解析pdf 文本，保存到txt文件中
 '''
-path = r'C:\Users\Think\Desktop\华为2015_cn年报.pdf'
-def parse():
-    fp = open(path, 'rb') # 以二进制读模式打开
+
+def parse(read_path,save_path):
+    fp = open(read_path, 'rb') # 以二进制读模式打开
     #用文件对象来创建一个pdf文档分析器
     praser = PDFParser(fp)
     # 创建一个PDF文档
@@ -74,10 +74,15 @@ def parse():
             # 这里layout是一个LTPage对象 里面存放着 这个page解析出的各种对象 一般包括LTTextBox, LTFigure, LTImage, LTTextBoxHorizontal 等等 想要获取文本就获得对象的text属性，
             for x in layout:
                 if (isinstance(x, LTTextBoxHorizontal)):
-                    with open(r'data/1.txt', 'a') as f:
-                        results = x.get_text()
+                    content = []
+                    with open(save_path, 'a') as f:
+                        results = x.get_text().encode('gbk','ignore').decode('gbk')
                         print(results)
                         f.write(results + '\n')
 
 if __name__ == '__main__':
-    parse()
+    for i in [2012, 2013, 2014, 2015, 2016, 2017]:
+        read_path = r'D:\sz_company_pdf\{}_万科.pdf'.format (i)
+        save_path = r'data/{}_万科.txt'.format(i)
+        print(read_path,save_path)
+        parse(read_path,save_path)
