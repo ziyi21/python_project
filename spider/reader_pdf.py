@@ -1,35 +1,11 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 __author__ = 'ziyi'
-# from urllib.request import urlopen
-# from pdfminer.pdfinterp import PDFResourceManager, process_pdf
-# from pdfminer.converter import TextConverter
-# from pdfminer.layout import LAParams
-# from io import StringIO
-# from io import open
-#
-# def readPDF(pdfFile):
-#     rsrcmgr = PDFResourceManager()
-#     retstr = StringIO()
-#     laparams = LAParams()
-#     device = TextConverter(rsrcmgr, retstr, laparams=laparams)
-#
-#     process_pdf(rsrcmgr, device, pdfFile)
-#     device.close()
-#
-#     content = retstr.getvalue()
-#     retstr.close()
-#     return content
-#
-# pdfFile = urlopen(r"C:\Users\Think\Desktop\华为2015_cn年报.pdf")
-# outputString = readPDF(pdfFile)
-# print(outputString)
-# pdfFile.close()
 
 import sys
 import importlib
+import os
 importlib.reload(sys)
-
 from pdfminer.pdfparser import PDFParser,PDFDocument
 from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import PDFPageAggregator
@@ -81,8 +57,14 @@ def parse(read_path,save_path):
                         f.write(results + '\n')
 
 if __name__ == '__main__':
-    for i in [2012, 2013, 2014, 2015, 2016, 2017]:
-        read_path = r'D:\sz_company_pdf\{}_万科.pdf'.format (i)
-        save_path = r'data/{}_万科.txt'.format(i)
-        print(read_path,save_path)
+    sz_pdf_path = 'D:\\financial_reports\\sz_financial_reports\\sz_pdf'
+    sh_pdf_path = 'D:\\financial_reports\\sh_financial_reports\\sh_pdf'
+    all_file_name = os.listdir(sz_pdf_path)
+    for file in all_file_name:
+        save_txt_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt_all'
+        fname = os.path.splitext (file)[0]
+        read_path = os.path.join (sz_pdf_path, file)
+        print(read_path)
+        save_path = os.path.join(save_txt_path,fname+'.txt')
+        print(save_path)
         parse(read_path,save_path)

@@ -2,27 +2,25 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ziyi'
 
+import os
 
 def get_content_index(file_path):
     file = open(file_path)
     content_index = []
+    key_word1 = ['前五','客户','销售']
+    key_word1 = ['前五', '客户', '销售']
+
     for i,line in enumerate(file):
-        if '前五' in line and '客户' and '销售金额' in line :
+        if '前五' in line and '客户' in line and '销售' in line :
             content_index.append(i)
-        elif '前五' in line and '供应商' and '采购额' in line :
+        elif '前五' in line and '供应商' in line and '采购' in line :
             content_index.append(i)
-        elif '前五' in line and '供应商' and '关联' in line :
+        elif '前五' in line and '供应商' in line and '关联' in line :
             content_index.append(i)
-        elif '前五' in line and '客户' and '关联' in line :
+        elif '前五' in line and '客户' in line and '关联' in line :
             content_index.append(i)
-        elif '前5' in line and '客户'  and '销售金额' in line:
-            content_index.append (i)
-        elif '前5' in line and '供应商'  and '采购额'in line:
-            content_index.append (i)
-        elif '前5' in line and '客户'  and '关联' in line:
-            content_index.append (i)
-        elif '前5' in line and '供应商'  and '关联'in line:
-            content_index.append (i)
+        # elif '前五' in line and '应收款' in line:
+        #     content_index.append (i)
     print(content_index)
     file.close ()
     return content_index
@@ -43,8 +41,16 @@ def get_main_content(file_path,num,save_path):
             f.write ('0' + '\n')
 
 if __name__ == '__main__':
-    for i in [2012, 2013, 2014, 2015, 2016]:
-        file_path = "data/{}_万科.txt".format (i)
-        save_path = r'pdf_record/{}_simple_万科.txt'.format (i)
-        index = get_content_index(file_path)
-        get_main_content(file_path,index,save_path)
+    sz_txt_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt_all'
+    sh_txt_path = 'D:\\financial_reports\\sh_financial_reports\\sh_txt_all'
+    all_file_name = os.listdir(sz_txt_path)
+    for file in all_file_name:
+        save_analysis_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt_analysis'
+        fname = os.path.splitext (file)[0]
+        read_path = os.path.join (sz_txt_path, file)
+        print(read_path)
+        save_path = os.path.join(save_analysis_path,fname+'_analysis'+'.txt')
+        print(save_path)
+        index = get_content_index (read_path)
+        get_main_content (read_path, index, save_path)
+
