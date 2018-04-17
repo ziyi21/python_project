@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ziyi'
 
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+__author__ = 'ziyi'
+
 import sys
 import importlib
 import os
@@ -143,19 +147,18 @@ def get_content(doc, interpreter, device,content,save_path):
             f.write ('未披露相关内容'.encode('gbk','ignore').decode('gbk'))
 
 if __name__ == '__main__':
-    sz_pdf_path = 'D:\\financial_reports\\sz_financial_reports\\sz_pdf'
     sh_pdf_path = 'D:\\financial_reports\\sh_financial_reports\\sh_pdf'
-    all_file_name = os.listdir (sz_pdf_path)
+    all_file_name = os.listdir (sh_pdf_path)
     for file in all_file_name:
         # 指定不同类型文件的保存地址
         fname = os.path.splitext (file)[0]
-        read_path = os.path.join (sz_pdf_path, file)
+        read_path = os.path.join (sh_pdf_path, file)
         print(read_path)
         # 保存完整pdf内容的地址
-        save_txt_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt_all'
+        save_txt_path = 'D:\\financial_reports\\sh_financial_reports\\sh_txt_all'
         save_all_path = os.path.join(save_txt_path,fname+'.txt')
         # 保存需要分析的pdf内容的地址
-        save_analysis_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt'
+        save_analysis_path = 'D:\\financial_reports\\sh_financial_reports\\sh_txt'
         save_simple_path = os.path.join(save_analysis_path,fname+'_simple'+'.txt')
         # print(read_path,save_all_path,save_simple_path)
         # 完整pdf的解析

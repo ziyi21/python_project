@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ziyi'
 
+'D:\\financial_reports\\sz_financial_reports\\sz_pdf\\2016_万科.PDF'
 import sys
 import importlib
 import os
@@ -44,7 +45,6 @@ def parse(read_path):
 def get_content_index(doc,interpreter,device,save_path):
     # 循环遍历列表，每次处理一个page的内容
     content = []
-    show = 'pdf解码错误'
     try:
         for page_index,page in enumerate(doc.get_pages()): # doc.get_pages() 获取page列表
             # print(page_index)
@@ -108,13 +108,10 @@ def get_content_index(doc,interpreter,device,save_path):
                     # elif '前五' in results :
                     #     print(results)
                         # content.append(page_index)
-                show = 'pdf解码成功'
     except Exception as e:
         print (save_path.split ('\\')[-1] + 'pdf解码错误')
-        show = 'pdf解码错误'
-        print(content)
-    finally:
-        return list(set(content)),show
+    print(content)
+    return list(set(content))
 
 def get_content(doc, interpreter, device,content,save_path):
     # 循环遍历列表，每次处理一个page的内容
@@ -142,29 +139,13 @@ def get_content(doc, interpreter, device,content,save_path):
         with open (save_path, 'a') as f:
             f.write ('未披露相关内容'.encode('gbk','ignore').decode('gbk'))
 
+
 if __name__ == '__main__':
-    sz_pdf_path = 'D:\\financial_reports\\sz_financial_reports\\sz_pdf'
-    sh_pdf_path = 'D:\\financial_reports\\sh_financial_reports\\sh_pdf'
-    all_file_name = os.listdir (sz_pdf_path)
-    for file in all_file_name:
-        # 指定不同类型文件的保存地址
-        fname = os.path.splitext (file)[0]
-        read_path = os.path.join (sz_pdf_path, file)
-        print(read_path)
-        # 保存完整pdf内容的地址
-        save_txt_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt_all'
-        save_all_path = os.path.join(save_txt_path,fname+'.txt')
-        # 保存需要分析的pdf内容的地址
-        save_analysis_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt'
-        save_simple_path = os.path.join(save_analysis_path,fname+'_simple'+'.txt')
-        # print(read_path,save_all_path,save_simple_path)
-        # 完整pdf的解析
-        doc, interpreter, device = parse (read_path)
-        # 获取有披露信息的页数
-        index,show = get_content_index (doc, interpreter, device, save_all_path)
-        if show == 'pdf解码成功':
-            # 保存对应页面中的所有内容
-            get_content (doc, interpreter, device, index, save_simple_path)
-        else:
-            with open (save_simple_path, 'a') as f:
-                f.write (show.encode ('gbk', 'ignore').decode ('gbk'))
+    read_path = 'D:\\financial_reports\\sz_financial_reports\\sz_pdf\\2015_万科.PDF'
+    save_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt\\2015_万科.txt'
+    # 完整pdf的解析
+    doc, interpreter, device = parse (read_path)
+    # 获取有披露信息的页数
+    index = get_content_index (doc, interpreter, device, save_path)
+    # 保存对应页面中的所有内容
+    get_content (doc, interpreter, device, index, save_path)
