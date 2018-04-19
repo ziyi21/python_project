@@ -2,6 +2,10 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ziyi'
 
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+__author__ = 'ziyi'
+
 import sys
 import importlib
 import os
@@ -11,10 +15,12 @@ from pdfminer.pdfinterp import PDFResourceManager, PDFPageInterpreter
 from pdfminer.converter import PDFPageAggregator
 from pdfminer.layout import LTTextBoxHorizontal,LAParams
 from pdfminer.pdfinterp import PDFTextExtractionNotAllowed
+from multiprocessing import Pool
 
 '''
  解析pdf 文本，保存到txt文件中
 '''
+
 
 def parse(read_path):
     fp = open(read_path, 'rb') # 以二进制读模式打开
@@ -40,6 +46,7 @@ def parse(read_path):
         # 创建一个PDF解释器对象
         interpreter = PDFPageInterpreter(rsrcmgr, device)
     return doc,interpreter,device
+
 
 def get_content_index(doc,interpreter,device,save_path):
     # 循环遍历列表，每次处理一个page的内容
@@ -119,6 +126,7 @@ def get_content_index(doc,interpreter,device,save_path):
     finally:
         return list(set(content)),show
 
+
 def get_content(doc, interpreter, device,content,save_path):
     # 循环遍历列表，每次处理一个page的内容
     # with open (save_path, 'a') as f:
@@ -142,31 +150,48 @@ def get_content(doc, interpreter, device,content,save_path):
             print(save_path.split('\\')[-1]+'信息提取成功')
     except Exception as e:
         print('未披露任何消息',e)
-        with open (save_path, 'a') as f:
-            f.write ('未披露相关内容'.encode('gbk','ignore').decode('gbk'))
+        with open(save_path, 'a') as f:
+            f.write('未披露相关内容'.encode('gbk','ignore').decode('gbk'))
+
+
+def main(file):
+    sz_pdf_path = 'D:\\financial_reports\\sz_financial_reports\\sz_pdf'
+    # 指定不同类型文件的保存地址
+    fname = os.path.splitext(file)[0]
+    read_path = os.path.join(sz_pdf_path, file)
+    print(read_path)
+    # 保存完整pdf内容的地址
+    save_txt_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt_all'
+    save_all_path = os.path.join(save_txt_path, fname + '.txt')
+    # 保存需要分析的pdf内容的地址
+    save_analysis_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt'
+    save_simple_path = os.path.join(save_analysis_path, fname + '_simple' + '.txt')
+    # print(read_path,save_all_path,save_simple_path)
+    # 完整pdf的解析
+    doc, interpreter, device = parse(read_path)
+    # 获取有披露信息的页数
+    index, show = get_content_index(doc, interpreter, device, save_all_path)
+    if show == 'pdf解码成功':
+        # 保存对应页面中的所有内容
+        get_content(doc, interpreter, device, index, save_simple_path)
+    else:
+        with open(save_simple_path, 'a') as f:
+            f.write(show.encode('gbk', 'ignore').decode('gbk'))
+
 
 if __name__ == '__main__':
     sz_pdf_path = 'D:\\financial_reports\\sz_financial_reports\\sz_pdf'
-    all_file_name = os.listdir (sz_pdf_path)
-    for file in all_file_name:
-        # 指定不同类型文件的保存地址
-        fname = os.path.splitext (file)[0]
-        read_path = os.path.join (sz_pdf_path, file)
-        print(read_path)
-        # 保存完整pdf内容的地址
-        save_txt_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt_all'
-        save_all_path = os.path.join(save_txt_path,fname+'.txt')
-        # 保存需要分析的pdf内容的地址
-        save_analysis_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt'
-        save_simple_path = os.path.join(save_analysis_path,fname+'_simple'+'.txt')
-        # print(read_path,save_all_path,save_simple_path)
-        # 完整pdf的解析
-        doc, interpreter, device = parse (read_path)
-        # 获取有披露信息的页数
-        index,show = get_content_index (doc, interpreter, device, save_all_path)
-        if show == 'pdf解码成功':
-            # 保存对应页面中的所有内容
-            get_content (doc, interpreter, device, index, save_simple_path)
-        else:
-            with open (save_simple_path, 'a') as f:
-                f.write (show.encode ('gbk', 'ignore').decode ('gbk'))
+    sz_txt_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt'
+    all_file_name = os.listdir(sz_pdf_path)
+    all_file_name = [i.split('.')[0] for i in all_file_name]
+    now_txt_name = os.listdir(sz_txt_path)
+    for i in now_txt_name:
+        name = i.split('.')[0][:-7]
+        # print(name)
+        all_file_name.remove(name)
+    all_file_name = [i+'.pdf' for i in all_file_name]
+    pool = Pool(10)
+    pool.map(main, all_file_name)
+    pool.close()
+    pool.join()
+

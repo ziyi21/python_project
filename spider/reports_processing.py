@@ -3,8 +3,10 @@
 __author__ = 'ziyi'
 
 import os
+import pandas as pd
 
 def create_reports_table(filename,path):
+    df = pd.DataFrame ({})
     analysis_data = {}
     failed_company = []
     # 所有内容初始化
@@ -140,12 +142,22 @@ def create_reports_table(filename,path):
     analysis_data['time'] = file_name.split('_')[0]
     analysis_data['total_information'] = int(analysis_data['five_customers_sale_all'])+int(analysis_data['five_relevance_customers_sale'])+int(analysis_data['five_relevance_customers_check'])+int(analysis_data['five_customers_name'])+int(analysis_data['five_customers_sale'])+int(analysis_data['five_supplier_buy_all']) +int(analysis_data['five_relevance_supplier_buy'])+int(analysis_data['five_relevance_supplier_check'])+int(analysis_data['five_supplier_name'])+int(analysis_data['five_supplier_buy'])
     print(analysis_data)
+    df = df.append (analysis_data, ignore_index=True)
+    return df
+
+def save_info(contents, name):
+    df = pd.DataFrame()
+    df = df.append(contents.copy())
+    df.to_csv('D:\\financial_reports\\sz_financial_reports\\{}.csv'.format(name), encoding='gbk',)
 
 if __name__ == '__main__':
     analysis_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt'
     all_file = os.listdir(analysis_path)
+    results = []
     for one in all_file:
         path = os.path.join(analysis_path,one)
         file_name = os.path.splitext(one)[0]
         print(path)
-        create_reports_table(file_name,path)
+        table = create_reports_table(file_name,path)
+        results.append(table)
+    save_info(results,analysis_path.split('\\')[-1])
