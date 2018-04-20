@@ -23,6 +23,7 @@ def create_reports_table(filename,path):
     analysis_data['five_supplier_name'] = 0
     analysis_data['five_supplier_buy'] = 0
     with open(path) as all:
+        customer = 0
         company_name = {}
         company_index = []
         all_txt = all.read()
@@ -58,9 +59,19 @@ def create_reports_table(filename,path):
                     # print(company_line)
                     # 有披露内容的指标的判断
                     # 1前五名客户合计销售金额占年度销售总额的比例
-                    if '客户' in company_line and '销售' in company_line and '比' in company_line:
+                    if '客户' in company_line and '销售' in company_line and '总额' in company_line:
+                        customer = 1
+                    elif '客户' in company_line and '营业' in company_line and '总额' in company_line:
+                        customer = 1
+                    if customer == 1 and '销售' in company_line and '比' in company_line:
+                        analysis_data['five_customers_sale_all'] = 1
+                    elif '客户' in company_line and '销售' in company_line and '比' in company_line:
                         analysis_data['five_customers_sale_all'] = 1
                     elif '客户' in company_line and '营业' in company_line and '比' in company_line:
+                        analysis_data['five_customers_sale_all'] = 1
+                    elif '客户' in company_line and '营业' in company_line and '总额' in company_line:
+                        analysis_data['five_customers_sale_all'] = 1
+                    elif '客户' in company_line and '营业' in company_line and '总额' in company_line:
                         analysis_data['five_customers_sale_all'] = 1
 
                     # 2前五名客户销售额中关联方销售额合计占年度销售总额的比例
@@ -137,7 +148,7 @@ def create_reports_table(filename,path):
             # 5前五名客户的具体销售额
 
     analysis_data['classify'] = '深市'
-    analysis_data['ID'] = 'film_ID'
+    analysis_data['ID'] = file_name.split('_')[2]
     analysis_data['name'] = file_name.split('_')[1]
     analysis_data['time'] = file_name.split('_')[0]
     analysis_data['total_information'] = int(analysis_data['five_customers_sale_all'])+int(analysis_data['five_relevance_customers_sale'])+int(analysis_data['five_relevance_customers_check'])+int(analysis_data['five_customers_name'])+int(analysis_data['five_customers_sale'])+int(analysis_data['five_supplier_buy_all']) +int(analysis_data['five_relevance_supplier_buy'])+int(analysis_data['five_relevance_supplier_check'])+int(analysis_data['five_supplier_name'])+int(analysis_data['five_supplier_buy'])
@@ -148,7 +159,7 @@ def create_reports_table(filename,path):
 def save_info(contents, name):
     df = pd.DataFrame()
     df = df.append(contents.copy())
-    df.to_csv('D:\\financial_reports\\sz_financial_reports\\{}.csv'.format(name), encoding='gbk',)
+    df.to_csv('D:\\financial_reports\\sz_financial_reports\\{}.csv'.format(name+'_test'), encoding='gbk',)
 
 if __name__ == '__main__':
     analysis_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt'
