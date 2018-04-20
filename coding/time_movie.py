@@ -63,7 +63,7 @@ def get_movie(url):
     df = df.append(contents, ignore_index=True)
     return df,comments_url
 
-def get_comments_basic(comment_url):
+def long_comments_pages(comments_url):
     next_page = None
     driver.get(comments_url)
     time.sleep (3)
@@ -110,7 +110,7 @@ def get_long_comments(comments_url,pages):
                 long_comments['comment_href'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[1]/div[1]/h3/a'.format(i+1)).get_attribute('href')
                 long_comments['praise'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[1]/div[2]/a[1]'.format(i+1)).text
                 long_comments['share'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[1]/div[2]/a[2]'.format(i+1)).text
-                long_comments['comments'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[1]/div[2]/a[3]'.format(i+1)).text
+                long_comments['reply'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[1]/div[2]/a[3]'.format(i+1)).text
                 long_comments['writer'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[2]/div/p[1]/a'.format(i+1)).text
                 long_comments['writer_url'] = one_comments.find_element_by_xpath ('//*[@id="reviewRegion"]/dl[{}]/dd[2]/div/p[1]/a'.format(i+1)).get_attribute('href')
                 long_comments['pubtime'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[2]/div/p[2]/a'.format(i+1)).text
@@ -163,20 +163,69 @@ def get_people_infor(people_url):
         print('评论者信息获取成功')
     return writer_infro
 
-def get_short_comments(comments_url):
+def short_comments_pages(comments_url):
+    next_page = None
+    driver.get(comments_url)
+    time.sleep (1)
+    short_comments_href = driver.find_element_by_xpath('/html/body/div[5]/div/div[1]/ul/li[2]/a').get_attribute('href')
+    driver.find_element_by_xpath('/html/body/div[5]/div/div[1]/ul/li[2]/a').click()
+    driver.get(short_comments_href)
+    driver.execute_script ('window.scrollTo(0, document.body.scrollHeight)')
+    time.sleep (1)
+    driver.execute_script ('window.scrollTo(document.body.scrollHeight,200)')
+    time.sleep (1)
+    driver.execute_script ('window.scrollTo(0, document.body.scrollHeight)')
+    time.sleep (1)
+    pages = driver.find_elements_by_xpath('//*[@id="PageNavigator"]/a')
+    all_pages = len(pages)-2
+    return all_pages
+
+def get_short_comments(comments_url,pages):
     df = pd.DataFrame({})
     short_comments = {}
+    have_score = None
+
     driver.get(comments_url)
-    time.sleep (3)
+    time.sleep(1)
     movie_short_comments = driver.find_element_by_xpath ('//html/body/div[5]/div/div[1]/ul/li[2]/a').text.split ('(')[-1].split (')')[0]
     short_comments_href = driver.find_element_by_xpath('/html/body/div[5]/div/div[1]/ul/li[2]/a').get_attribute('href')
     driver.find_element_by_xpath('/html/body/div[5]/div/div[1]/ul/li[2]/a').click()
     driver.get(short_comments_href)
-    time.sleep(2)
-    short_comments['savetime'] = time.strftime ('%Y-%m-%d %H:%M:%S', time.localtime (time.time ()))
+    time.sleep(1)
     a = driver.find_element_by_xpath('//*[@id="tweetRegion"]/dd[1]/div/h3').text
     print(a)
-    # long_comments_list = driver.find_elements_by_xpath('#reviewRegion/dl[@class="clearfix"]')
+    for page in range(pages):
+        next_page = None
+        try:
+            next_page = driver.find_element_by_xpath('//*[@id="key_nextpage"]')
+        except:
+            print('已经翻到最后一页了')
+        finally:
+            next_page = next_page
+        if next_page or page:
+            short_comments_list = driver.find_elements_by_xpath('//*[@id="tweetRegion"]/dd/div/h3')
+            for i, one_comment in enumerate(short_comments_list):
+                short_comments['short_comment'] = one_comment.find_element_by_xpath('//*[@id="tweetRegion"]/dd[{}]/div/h3'.format(i+1)).text
+                short_comments['short_praise'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[2]/div/div[2]/a[1]'.format (i + 1)).text
+                short_comments['short_share'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[2]/div/div[2]/a[2]'.format (i + 1)).text
+                short_comments['short_reply'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[2]/div/div[2]/a[3]'.format (i + 1)).text
+                short_comments['short_writer'] = one_comment.find_element_by_xpath('//*[@id="tweetRegion"]/dd[{}]/div/div[1]/div[1]/p[1]/a'.format(i+1)).text
+                short_comments['short_writer'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[1]/div[1]/p[1]/a'.format (i + 1)).text
+                short_comments['short_writer_url'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[1]/div[1]/p[1]/a'.format (i + 1)).get_attribute('href')
+                short_comments['short_pubtime'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[1]/div[2]/a'.format (i + 1)).get_attribute ('entertime')
+                try:
+                    have_score = one_comment.find_element_by_xpath('//*[@id="tweetRegion"]/dd[{}]/div/div[1]/div[1]/p[2]/span'.format(i+1)).text
+                except:
+                    print ('该用户未进行评分')
+                finally:
+                    short_comments['short_score'] = have_score
+                short_comments['savetime'] = time.strftime ('%Y-%m-%d %H:%M:%S', time.localtime (time.time ()))
+                df = df.append (short_comments, ignore_index=True)
+                print (short_comments)
+            if next_page:
+                next_page.click ()
+                time.sleep(3)
+    return short_comments
 
 
 def save_info(contents, name):
@@ -192,16 +241,11 @@ if __name__ == '__main__':
     # contents, comments_url = get_movie(url)
     # save_info(contents,movie_name)
     comments_url = 'http://movie.mtime.com/219107/comment.html'
-    # pages = get_comments_basic(comments_url)
+    # pages = long_comments_pages(comments_url)
     # long_comments, comment_content_url, writer_url = get_long_comments(comments_url, pages)
-    # save_info(long_comments, movie_name+'_long_comments_basic')
+    # save_info(long_comments, movie_name+'_长影评')
     # get_comments_content(comment_content_url)
     # get_people_infor(writer_url)
-
-    get_short_comments(comments_url)
-
-
-
-
-
-
+    short_pages = short_comments_pages(comments_url)
+    short_comments = get_short_comments(comments_url,short_pages)
+    save_info (short_comments, movie_name + '_微影评')
