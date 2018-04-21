@@ -15,36 +15,36 @@ def get_movie(url):
     print(movie_url)
     driver.get(movie_url)
     time.sleep(5)
-    contents['movie_name'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[1]/h1').text
+    contents['movie_name'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[1]/h1').text.encode('gbk','ignore').decode('gbk')
     print(contents)
     try:
-        contents['movie_english_name'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[1]/p[2]').text
+        contents['movie_english_name'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[1]/p[2]').text.encode('gbk','ignore').decode('gbk')
     except:
         print('没有英文名称')
-    contents['movie_time'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[2]/span').text
+    contents['movie_time'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[2]/span').text.encode('gbk','ignore').decode('gbk')
     movie_classes = driver.find_elements_by_xpath('//*[@id="db_head"]/div[2]/div/div[2]//a[@property="v:genre"]')
     classes = []
     for classify in movie_classes:
         classes.append(classify.text.encode('gbk','ignore').decode('gbk'))
     contents['movie_classify'] = ','.join(one for one in classes)
-    contents['movie_show_time'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[2]/a[last()]').text
-    contents['movie_introduce_videos'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[1]/a').text
-    contents['movie_introduce_pictures'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[2]/a').text
-    contents['movie_introduce_actors'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[3]/a').text
-    contents['movie_introduce_comments'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[4]/a').text
-    contents['movie_introduce_news'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[5]/a').text
-    contents['movie_scores'] = driver.find_element_by_xpath('//*[@id="ratingRegion"]/div[1]/b').text
-    contents['movie_scores_total'] = driver.find_element_by_xpath('//*[@id="ratingRegion"]/div[1]/p').text
-    contents['movie_income'] = driver.find_element_by_xpath('//*[@id="ratingRegion"]/div[2]/span').text
-    contents['movie_cinema'] = driver.find_element_by_xpath ('//*[@id="descripRegion"]/div/div/div[1]/b[1]').text
-    contents['movie_play_times'] = driver.find_element_by_xpath('//*[@id="descripRegion"]/div/div/div[1]/b[2]').text
-    contents['movie_director'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[1]/a').text
-    contents['movie_scenarist'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[2]').text
-    contents['movie_country'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[3]/a').text
-    contents['movie_company'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[4]/a').text
+    contents['movie_show_time'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[2]/a[last()]').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_introduce_videos'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[1]/a').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_introduce_pictures'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[2]/a').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_introduce_actors'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[3]/a').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_introduce_comments'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[4]/a').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_introduce_news'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[5]/a').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_scores'] = driver.find_element_by_xpath('//*[@id="ratingRegion"]/div[1]/b').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_scores_total'] = driver.find_element_by_xpath('//*[@id="ratingRegion"]/div[1]/p').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_income'] = driver.find_element_by_xpath('//*[@id="ratingRegion"]/div[2]/span').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_cinema'] = driver.find_element_by_xpath ('//*[@id="descripRegion"]/div/div/div[1]/b[1]').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_play_times'] = driver.find_element_by_xpath('//*[@id="descripRegion"]/div/div/div[1]/b[2]').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_director'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[1]/a').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_scenarist'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[2]').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_country'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[3]/a').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_company'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[4]/a').text.encode('gbk','ignore').decode('gbk')
     driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dt/p[2]/a').click()
     time.sleep(3)
-    contents['movie_introduction'] = driver.find_element_by_xpath('//*[@id="paragraphRegion"]/div/div[2]/div[2]/p[2]').text
+    contents['movie_introduction'] = driver.find_element_by_xpath('//*[@id="paragraphRegion"]/div/div[2]/div[2]/p[2]').text.encode('gbk','ignore').decode('gbk')
     # '//*[@id="paragraphRegion"]/div/div[3]/div[2]/p[1]'
     # '//*[@id="paragraphRegion"]/div/div[4]/div[2]/p[1]'
     # '//*[@id="paragraphRegion"]/div/div[2]/div[2]/p[2]'
@@ -56,8 +56,8 @@ def get_movie(url):
         time.sleep (2)
         driver.get(comments_url)
         time.sleep(3)
-        contents['movie_long_comments'] = driver.find_element_by_xpath('/html/body/div[5]/div/div[1]/ul/li[1]/a').text.split('(')[-1].split(')')[0]
-        contents['movie_short_comments'] = driver.find_element_by_xpath ('//html/body/div[5]/div/div[1]/ul/li[2]/a').text.split('(')[-1].split(')')[0]
+        contents['movie_long_comments'] = driver.find_element_by_xpath('/html/body/div[5]/div/div[1]/ul/li[1]/a').text.encode('gbk','ignore').decode('gbk').split('(')[-1].split(')')[0]
+        contents['movie_short_comments'] = driver.find_element_by_xpath ('//html/body/div[5]/div/div[1]/ul/li[2]/a').text.encode('gbk','ignore').decode('gbk').split('(')[-1].split(')')[0]
         contents['movie_introduce_comments'] = int(contents['movie_short_comments'])+int(contents['movie_long_comments'])
     print(contents)
     df = df.append(contents, ignore_index=True)
@@ -90,7 +90,7 @@ def get_long_comments(comments_url,pages):
     time.sleep (2)
     driver.execute_script ('window.scrollTo(document.body.scrollHeight,200)')
     time.sleep (2)
-    movie_long_comments = driver.find_element_by_xpath ('/html/body/div[5]/div/div[1]/ul/li[1]/a').text.split ('(')[-1].split (')')[0]
+    movie_long_comments = driver.find_element_by_xpath ('/html/body/div[5]/div/div[1]/ul/li[1]/a').text.encode('gbk','ignore').decode('gbk').split ('(')[-1].split (')')[0]
     print(movie_long_comments)
     # long_comments_one = driver.find_element_by_xpath ('//*[@id="reviewRegion"]/dl[1]/dd[1]/div[1]/h3/a')
     # print(long_comments_one)
@@ -106,23 +106,23 @@ def get_long_comments(comments_url,pages):
             long_comments_list = driver.find_elements_by_xpath('//*[@id="reviewRegion"]/dl[@class="clearfix"]')
             for i,one_comments in enumerate(long_comments_list):
                 print(i+1, one_comments)
-                long_comments['header_name'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[1]/div[1]/h3/a'.format(i+1)).text
+                long_comments['header_name'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[1]/div[1]/h3/a'.format(i+1)).text.encode('gbk','ignore').decode('gbk')
                 long_comments['comment_href'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[1]/div[1]/h3/a'.format(i+1)).get_attribute('href')
-                long_comments['praise'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[1]/div[2]/a[1]'.format(i+1)).text
-                long_comments['share'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[1]/div[2]/a[2]'.format(i+1)).text
-                long_comments['reply'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[1]/div[2]/a[3]'.format(i+1)).text
-                long_comments['writer'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[2]/div/p[1]/a'.format(i+1)).text
+                long_comments['praise'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[1]/div[2]/a[1]'.format(i+1)).text.encode('gbk','ignore').decode('gbk')
+                long_comments['share'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[1]/div[2]/a[2]'.format(i+1)).text.encode('gbk','ignore').decode('gbk')
+                long_comments['reply'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[1]/div[2]/a[3]'.format(i+1)).text.encode('gbk','ignore').decode('gbk')
+                long_comments['writer'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[2]/div/p[1]/a'.format(i+1)).text.encode('gbk','ignore').decode('gbk')
                 long_comments['writer_url'] = one_comments.find_element_by_xpath ('//*[@id="reviewRegion"]/dl[{}]/dd[2]/div/p[1]/a'.format(i+1)).get_attribute('href')
-                long_comments['pubtime'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[2]/div/p[2]/a'.format(i+1)).text
+                long_comments['pubtime'] = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[2]/div/p[2]/a'.format(i+1)).text.encode('gbk','ignore').decode('gbk')
                 try:
-                    have_score = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[2]/div/p[3]/span'.format(i+1)).text
+                    have_score = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dd[2]/div/p[3]/span'.format(i+1)).text.encode('gbk','ignore').decode('gbk')
                 except:
                     print('该用户未进行评分')
                 finally:
                     long_comments['score'] = have_score
 
                 try:
-                    top = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dt'.format(i+1)).text.replace('\n','')
+                    top = one_comments.find_element_by_xpath('//*[@id="reviewRegion"]/dl[{}]/dt'.format(i+1)).text.encode('gbk','ignore').decode('gbk').replace('\n','')
                 except:
                     print('该影评非top')
                 finally:
@@ -140,31 +140,30 @@ def get_long_comments(comments_url,pages):
                 time.sleep(3)
     return df,comments_content_url,writer_url
 
-def get_comments_content(comment_content_url):
-    comments_content = {}
-    for one_content_url in comment_content_url:
-        driver.get(one_content_url)
-        time.sleep(3)
-        content = '\n'.join(p.text for p in driver.find_elements_by_xpath('/html/body/div[3]/div[2]/div[3]//p'))
-        comments_content[one_content_url] = content
-        print('评论的内容获取成功')
-    print(comments_content)
-    return comments_content
+# def get_comments_content(comment_content_url):
+#     comments_content = {}
+#     for one_content_url in comment_content_url:
+#         driver.get(one_content_url)
+#         time.sleep(3)
+#         content = '\n'.join(p.text.encode('gbk','ignore').decode('gbk') for p in driver.find_elements_by_xpath('/html/body/div[3]/div[2]/div[3]//p'))
+#         comments_content[one_content_url] = content
+#         print('评论的内容获取成功')
+#     print(comments_content)
+#     return comments_content
 
-def get_people_infor(people_url):
-    writer_infro = {}
-    for one_url in people_url:
-        driver.get(one_url)
-        time.sleep(3)
-        driver.set_page_load_timeout (15)
-        writer_infro['people_location'] = driver.find_element_by_xpath('//*[@id="left_col"]/div[1]/div/div/div[1]/div/div[2]/p[1]/span').text
-        writer_infro['people_constellatory'] = driver.find_element_by_xpath('//*[@id="left_col"]/div[1]/div/div/div[1]/div/div[2]/p[2]').text.split('')[-1]
-        writer_infro['people_gender'] = driver.find_element_by_xpath ('//*[@id="left_col"]/div[1]/div/div/div[1]/div/div[2]/p[2]').text.split ('')[1]
-        print('评论者信息获取成功')
-    return writer_infro
+# def get_people_infor(people_url):
+#     writer_infro = {}
+#     for one_url in people_url:
+#         driver.get(one_url)
+#         time.sleep(3)
+#         driver.set_page_load_timeout (15)
+#         writer_infro['people_location'] = driver.find_element_by_xpath('//*[@id="left_col"]/div[1]/div/div/div[1]/div/div[2]/p[1]/span').text.encode('gbk','ignore').decode('gbk')
+#         writer_infro['people_constellatory'] = driver.find_element_by_xpath('//*[@id="left_col"]/div[1]/div/div/div[1]/div/div[2]/p[2]').text.encode('gbk','ignore').decode('gbk').split('')[-1]
+#         writer_infro['people_gender'] = driver.find_element_by_xpath ('//*[@id="left_col"]/div[1]/div/div/div[1]/div/div[2]/p[2]').text.encode('gbk','ignore').decode('gbk').split ('')[1]
+#         print('评论者信息获取成功')
+#     return writer_infro
 
 def short_comments_pages(comments_url):
-    next_page = None
     driver.get(comments_url)
     time.sleep (1)
     short_comments_href = driver.find_element_by_xpath('/html/body/div[5]/div/div[1]/ul/li[2]/a').get_attribute('href')
@@ -187,12 +186,12 @@ def get_short_comments(comments_url,pages):
 
     driver.get(comments_url)
     time.sleep(1)
-    movie_short_comments = driver.find_element_by_xpath ('//html/body/div[5]/div/div[1]/ul/li[2]/a').text.split ('(')[-1].split (')')[0]
+    movie_short_comments = driver.find_element_by_xpath ('//html/body/div[5]/div/div[1]/ul/li[2]/a').text.encode('gbk','ignore').decode('gbk').split ('(')[-1].split (')')[0]
     short_comments_href = driver.find_element_by_xpath('/html/body/div[5]/div/div[1]/ul/li[2]/a').get_attribute('href')
     driver.find_element_by_xpath('/html/body/div[5]/div/div[1]/ul/li[2]/a').click()
     driver.get(short_comments_href)
     time.sleep(1)
-    a = driver.find_element_by_xpath('//*[@id="tweetRegion"]/dd[1]/div/h3').text
+    a = driver.find_element_by_xpath('//*[@id="tweetRegion"]/dd[1]/div/h3').text.encode('gbk','ignore').decode('gbk')
     print(a)
     for page in range(pages):
         next_page = None
@@ -205,16 +204,16 @@ def get_short_comments(comments_url,pages):
         if next_page or page:
             short_comments_list = driver.find_elements_by_xpath('//*[@id="tweetRegion"]/dd/div/h3')
             for i, one_comment in enumerate(short_comments_list):
-                short_comments['short_comment'] = one_comment.find_element_by_xpath('//*[@id="tweetRegion"]/dd[{}]/div/h3'.format(i+1)).text
-                short_comments['short_praise'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[2]/div/div[2]/a[1]'.format (i + 1)).text
-                short_comments['short_share'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[2]/div/div[2]/a[2]'.format (i + 1)).text
-                short_comments['short_reply'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[2]/div/div[2]/a[3]'.format (i + 1)).text
-                short_comments['short_writer'] = one_comment.find_element_by_xpath('//*[@id="tweetRegion"]/dd[{}]/div/div[1]/div[1]/p[1]/a'.format(i+1)).text
-                short_comments['short_writer'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[1]/div[1]/p[1]/a'.format (i + 1)).text
+                short_comments['short_comment'] = one_comment.find_element_by_xpath('//*[@id="tweetRegion"]/dd[{}]/div/h3'.format(i+1)).text.encode('gbk','ignore').decode('gbk')
+                short_comments['short_praise'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[2]/div/div[2]/a[1]'.format (i + 1)).text.encode('gbk','ignore').decode('gbk')
+                short_comments['short_share'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[2]/div/div[2]/a[2]'.format (i + 1)).text.encode('gbk','ignore').decode('gbk')
+                short_comments['short_reply'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[2]/div/div[2]/a[3]'.format (i + 1)).text.encode('gbk','ignore').decode('gbk')
+                short_comments['short_writer'] = one_comment.find_element_by_xpath('//*[@id="tweetRegion"]/dd[{}]/div/div[1]/div[1]/p[1]/a'.format(i+1)).text.encode('gbk','ignore').decode('gbk')
+                short_comments['short_writer'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[1]/div[1]/p[1]/a'.format (i + 1)).text.encode('gbk','ignore').decode('gbk')
                 short_comments['short_writer_url'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[1]/div[1]/p[1]/a'.format (i + 1)).get_attribute('href')
                 short_comments['short_pubtime'] = one_comment.find_element_by_xpath ('//*[@id="tweetRegion"]/dd[{}]/div/div[1]/div[2]/a'.format (i + 1)).get_attribute ('entertime')
                 try:
-                    have_score = one_comment.find_element_by_xpath('//*[@id="tweetRegion"]/dd[{}]/div/div[1]/div[1]/p[2]/span'.format(i+1)).text
+                    have_score = one_comment.find_element_by_xpath('//*[@id="tweetRegion"]/dd[{}]/div/div[1]/div[1]/p[2]/span'.format(i+1)).text.encode('gbk','ignore').decode('gbk')
                 except:
                     print ('该用户未进行评分')
                 finally:
@@ -225,27 +224,31 @@ def get_short_comments(comments_url,pages):
             if next_page:
                 next_page.click ()
                 time.sleep(3)
-    return short_comments
-
+    return df
 
 def save_info(contents, name):
     df = pd.DataFrame()
     df = df.append(contents.copy())
-    df.to_csv(r'data\movie\{}.csv'.format(name), encoding='gbk',)
+    df.to_csv(r'data\movie_thwj\{}.csv'.format(name), encoding='gbk',index=None)
 
 
 if __name__ == '__main__':
     movie_name = '头号玩家'
     url = 'http://search.mtime.com/search/?q={}'.format (movie_name)
     driver = webdriver.Chrome (executable_path=r'D:\ksdler\chromedriver_win32_new\chromedriver')
+    # 获取某部影片的基本信息
     # contents, comments_url = get_movie(url)
     # save_info(contents,movie_name)
     comments_url = 'http://movie.mtime.com/219107/comment.html'
+    # 获取长影评并且完成存储
     # pages = long_comments_pages(comments_url)
     # long_comments, comment_content_url, writer_url = get_long_comments(comments_url, pages)
-    # save_info(long_comments, movie_name+'_长影评')
+    # save_info(long_comments, movie_name+'_long_comments')
+    # 获取长影评的内容
     # get_comments_content(comment_content_url)
+    # 获取用户的个人信息
     # get_people_infor(writer_url)
+    # 获取短影评并且完成存储
     short_pages = short_comments_pages(comments_url)
     short_comments = get_short_comments(comments_url,short_pages)
-    save_info (short_comments, movie_name + '_微影评')
+    save_info (short_comments, 'short_comments')
