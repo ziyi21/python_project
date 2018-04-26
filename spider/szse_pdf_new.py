@@ -21,7 +21,6 @@ from multiprocessing import Pool
  解析pdf 文本，保存到txt文件中
 '''
 
-
 def parse(read_path):
     fp = open(read_path, 'rb') # 以二进制读模式打开
     #用文件对象来创建一个pdf文档分析器
@@ -78,9 +77,7 @@ def get_content_index(doc,interpreter,device,save_path):
                         content.append (page_index + 1)
 
                 show = 'pdf解码成功'
-            # if len(set(content)) >= 2:
-            #     print('本报告停止检索')
-            #     break
+
     except Exception as e:
         print (save_path.split ('\\')[-1] + 'pdf解码错误')
         show = 'pdf解码错误'
@@ -100,7 +97,7 @@ def get_content(doc, interpreter, device,content,save_path):
                     interpreter.process_page (page)
                     # 接受该页面的LTPage对象
                     layout = device.get_result ()
-                    if page_index == get_index or page_index-1 == get_index:
+                    if page_index == get_index :
                         for x in layout:
                             if (isinstance(x, LTTextBoxHorizontal)):
                                 print(x.get_text())
@@ -127,7 +124,6 @@ def main(file):
     # 保存需要分析的pdf内容的地址
     save_analysis_path = 'D:\\financial_reports\\sh_financial_reports\\sh_txt'
     save_simple_path = os.path.join(save_analysis_path, fname + '_simple' + '.txt')
-    # print(read_path,save_all_path,save_simple_path)
     # 完整pdf的解析
     doc, interpreter, device = parse(read_path)
     # 获取有披露信息的页数
