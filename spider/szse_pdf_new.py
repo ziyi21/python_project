@@ -65,67 +65,28 @@ def get_content_index(doc,interpreter,device,save_path):
                     results = x.get_text ().encode ('gbk', 'ignore').decode ('gbk')
                     # print(x.get_text())
                     # 判断获取前五客户的相关披露信息
-                    if '前五' in results and '客户' in results :
-                        print (page_index)
-                        print(results)
-                        content.append(page_index)
-                    elif '前五' in results and '客户' in results and '销售' in results:
-                        content.append (page_index)
-                    elif '前五' in results and '客户' in results and '关联' in results:
-                        content.append (page_index)
-                    # 判断获取前五供应商的相关披露信息
-                    elif '前五' in results and '供应商' in results :
-                        content.append (page_index)
-                    elif '前五' in results and '供应商' in results and '采购' in results:
-                        content.append (page_index)
-                    elif '前五' in results and '供应商' in results and '关联' in results:
-                        content.append(page_index)
-                    # 判断获取前五供货商的相关披露信息
-                    elif '前五' in results and '供货商' in results :
-                        content.append (page_index)
-                    elif '前五' in results and '供货商' in results and '采购' in results:
-                        content.append (page_index)
-                    elif '前五' in results and '供货商' in results and '关联' in results:
-                        content.append(page_index)
+                    if '前五' in results or '前5' in results or '主要' in results:
+                        if '客户' in results or '供应商' in results or '供货商' in results:
+                            content.append(page_index)
+                            content.append (page_index + 1)
+                            if '销售' in results or '关联' in results or '采购' in results:
+                                content.append (page_index)
+                                content.append (page_index + 1)
 
                     elif '主要' in results and '客户' in results and '和' in results and '供应商' in results:
                         content.append (page_index)
+                        content.append (page_index + 1)
 
-                    elif '前5' in results and '客户' in results :
-                        content.append (page_index)
-                    elif '前5' in results and '客户' in results and '销售' in results:
-                        content.append (page_index)
-                    elif '前5' in results and '客户' in results and '关联' in results:
-                        content.append (page_index)
-                    # 判断获取前五供应商的相关披露信息
-                    elif '前5' in results and '供应商' in results :
-                        content.append (page_index)
-                    elif '前5' in results and '供应商' in results and '采购' in results:
-                        content.append (page_index)
-                    elif '前5' in results and '供应商' in results and '关联' in results:
-                        content.append(page_index)
-                    # 判断获取前五供货商的相关披露信息
-                    elif '前5' in results and '供货商' in results :
-                        content.append (page_index)
-                    elif '前5' in results and '供货商' in results and '采购' in results:
-                        content.append (page_index)
-                    elif '前5' in results and '供货商' in results and '关联' in results:
-                        content.append(page_index)
-                    # 获取其他前五的披露的所有信息
-                    # elif '前五' in results :
-                    #     print(results)
-                        # content.append(page_index)
                 show = 'pdf解码成功'
-            if len(set(content)) >= 2:
-                print('本报告停止检索')
-                break
+            # if len(set(content)) >= 2:
+            #     print('本报告停止检索')
+            #     break
     except Exception as e:
         print (save_path.split ('\\')[-1] + 'pdf解码错误')
         show = 'pdf解码错误'
         print(content)
     finally:
         return list(set(content)),show
-
 
 def get_content(doc, interpreter, device,content,save_path):
     # 循环遍历列表，每次处理一个page的内容
@@ -155,16 +116,16 @@ def get_content(doc, interpreter, device,content,save_path):
 
 
 def main(file):
-    sz_pdf_path = 'D:\\financial_reports\\sz_financial_reports\\sz_pdf'
+    sz_pdf_path = 'D:\\financial_reports\\sh_financial_reports\\sh_pdf'
     # 指定不同类型文件的保存地址
     fname = os.path.splitext(file)[0]
     read_path = os.path.join(sz_pdf_path, file)
     print(read_path)
     # 保存完整pdf内容的地址
-    save_txt_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt_all'
+    save_txt_path = 'D:\\financial_reports\\sh_financial_reports\\sh_txt_all'
     save_all_path = os.path.join(save_txt_path, fname + '.txt')
     # 保存需要分析的pdf内容的地址
-    save_analysis_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt'
+    save_analysis_path = 'D:\\financial_reports\\sh_financial_reports\\sh_txt'
     save_simple_path = os.path.join(save_analysis_path, fname + '_simple' + '.txt')
     # print(read_path,save_all_path,save_simple_path)
     # 完整pdf的解析
@@ -180,17 +141,18 @@ def main(file):
 
 
 if __name__ == '__main__':
-    sz_pdf_path = 'D:\\financial_reports\\sz_financial_reports\\sz_pdf'
-    sz_txt_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt'
+    sz_pdf_path = 'D:\\financial_reports\\sh_financial_reports\\sh_pdf'
+    sz_txt_path = 'D:\\financial_reports\\sh_financial_reports\\sh_txt'
     all_file_name = os.listdir(sz_pdf_path)
     all_file_name = [i.split('.')[0] for i in all_file_name]
     now_txt_name = os.listdir(sz_txt_path)
-    for i in now_txt_name:
-        name = i.split('.')[0][:-7]
-        # print(name)
-        all_file_name.remove(name)
+    if now_txt_name:
+        for i in now_txt_name:
+            name = i.split('.')[0][:-7]
+            # print(name)
+            all_file_name.remove(name)
     all_file_name = [i+'.pdf' for i in all_file_name]
-    pool = Pool(10)
+    pool = Pool(2)
     pool.map(main, all_file_name)
     pool.close()
     pool.join()

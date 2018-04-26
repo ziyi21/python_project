@@ -57,61 +57,27 @@ def get_content_index(doc,interpreter,device,save_path):
                 if (isinstance(x, LTTextBoxHorizontal)):
                     results = x.get_text ().encode ('gbk', 'ignore').decode ('gbk')
                     # print(x.get_text())
+                    # with open (save_path, 'a') as f:
+                    #     results = x.get_text ().encode ('gbk', 'ignore').decode ('gbk')
+                    #     print (results)
+                    #     f.write (results + '\n')
                     # 判断获取前五客户的相关披露信息
-                    if '前五' in results and '客户' in results :
-                        print (page_index)
-                        print(results)
-                        content.append(page_index)
-                    elif '前五' in results and '客户' in results and '销售' in results:
-                        content.append (page_index)
-                    elif '前五' in results and '客户' in results and '关联' in results:
-                        content.append (page_index)
-                    # 判断获取前五供应商的相关披露信息
-                    elif '前五' in results and '供应商' in results :
-                        content.append (page_index)
-                    elif '前五' in results and '供应商' in results and '采购' in results:
-                        content.append (page_index)
-                    elif '前五' in results and '供应商' in results and '关联' in results:
-                        content.append(page_index)
-                    # 判断获取前五供货商的相关披露信息
-                    elif '前五' in results and '供货商' in results :
-                        content.append (page_index)
-                    elif '前五' in results and '供货商' in results and '采购' in results:
-                        content.append (page_index)
-                    elif '前五' in results and '供货商' in results and '关联' in results:
-                        content.append(page_index)
+                    if '前五' in results or '前5' in results :
+                        if '客户' in results or '供应商' in results or '供货商' in results:
+                            content.append(page_index)
+                            content.append (page_index + 1)
+                            if '销售' in results or '关联' in results or '采购' in results:
+                                content.append (page_index)
+                                content.append (page_index + 1)
 
                     elif '主要' in results and '客户' in results and '和' in results and '供应商' in results:
                         content.append (page_index)
+                        content.append (page_index + 1)
 
-                    elif '前5' in results and '客户' in results :
-                        content.append (page_index)
-                    elif '前5' in results and '客户' in results and '销售' in results:
-                        content.append (page_index)
-                    elif '前5' in results and '客户' in results and '关联' in results:
-                        content.append (page_index)
-                    # 判断获取前五供应商的相关披露信息
-                    elif '前5' in results and '供应商' in results :
-                        content.append (page_index)
-                    elif '前5' in results and '供应商' in results and '采购' in results:
-                        content.append (page_index)
-                    elif '前5' in results and '供应商' in results and '关联' in results:
-                        content.append(page_index)
-                    # 判断获取前五供货商的相关披露信息
-                    elif '前5' in results and '供货商' in results :
-                        content.append (page_index)
-                    elif '前5' in results and '供货商' in results and '采购' in results:
-                        content.append (page_index)
-                    elif '前5' in results and '供货商' in results and '关联' in results:
-                        content.append(page_index)
-                    # 获取其他前五的披露的所有信息
-                    # elif '前五' in results :
-                    #     print(results)
-                        # content.append(page_index)
                 show = 'pdf解码成功'
-            if len(set(content)) >= 2:
-                print('本报告停止检索')
-                break
+            # if len(set(content)) >= 4:
+            #     print('本报告停止检索')
+            #     break
     except Exception as e:
         print (save_path.split ('\\')[-1] + 'pdf解码错误')
         show = 'pdf解码错误'
@@ -131,7 +97,7 @@ def get_content(doc, interpreter, device,content,save_path):
                     interpreter.process_page (page)
                     # 接受该页面的LTPage对象
                     layout = device.get_result ()
-                    if page_index == get_index or page_index-1 == get_index:
+                    if page_index == get_index :
                         for x in layout:
                             if (isinstance(x, LTTextBoxHorizontal)):
                                 print(x.get_text())
@@ -157,7 +123,7 @@ if __name__ == '__main__':
         save_txt_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt_all'
         save_all_path = os.path.join(save_txt_path,fname+'.txt')
         # 保存需要分析的pdf内容的地址
-        save_analysis_path = 'D:\\financial_reports\\sz_financial_reports\\sz_txt'
+        save_analysis_path = 'D:\\financial_reports\\sz_financial_reports\\sh_txt'
         save_simple_path = os.path.join(save_analysis_path,fname+'_simple'+'.txt')
         # print(read_path,save_all_path,save_simple_path)
         # 完整pdf的解析
