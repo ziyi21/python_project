@@ -2,10 +2,6 @@
 # -*- coding: utf-8 -*-
 __author__ = 'ziyi'
 
-#!/usr/bin/python
-# -*- coding: utf-8 -*-
-__author__ = 'ziyi'
-
 import sys
 import importlib
 import os
