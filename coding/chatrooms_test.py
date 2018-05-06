@@ -43,7 +43,7 @@ def get_contents(path):
 if __name__ == '__main__':
     path = 'data/chatrooms/chatrooms_contents.txt'
     # send_contents = get_contents(path)
-    sched_time = datetime.datetime (2018, 5, 1, 1,1 , 10)  # 设定初次触发事件的事件点
+    sched_time = datetime.datetime (2018, 5, 1, 1,25 , 10)  # 设定初次触发事件的事件点
     print(sched_time)
     # SentChatRoomsMsg(send_contents)
     timerfun(sched_time,path)

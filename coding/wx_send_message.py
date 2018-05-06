@@ -7,6 +7,7 @@ import time , datetime
 
 def timerfun(sched_time,path) :
     flag = 0
+
     while True:
         now = datetime.datetime.now()
         if now > sched_time and now < sched_time + datetime.timedelta(seconds=1) :  # 因为时间秒之后的小数部分不一定相等，要标记一个范围判断
@@ -27,23 +28,23 @@ def SentChatRoomsMsg(send_contents):
     chatrooms = itchat.get_chatrooms(update=True)
     print(len(chatrooms))
     for one_name in chatrooms:
-        one_name = one_name['NickName']
-        if '大数据' in one_name or '数据家' in one_name or '学习' in one_name or '交流' in one_name or '数据分析与应用' in one_name or '智新赋能' in one_name or '实习信息' in one_name: # or '优惠' in one_name
-            if '公安' not in one_name and '栖霞' not in one_name and '哈希大数据'!=one_name.replace(' ' ,''):
-                searchName = one_name
+        name = one_name['NickName']
+        if '大数据' in name or '数据家' in name or '学习' in name or '交流' in name or '数据分析与应用' in name or '智新赋能' in name or '实习信息' in name: # or '优惠' in one_name
+
+            if '公安' not in name and '栖霞' not in name and '哈希大数据'!= name.replace(' ' ,''):
+                searchName = name
                 iRoom = itchat.search_chatrooms(searchName)
                 for room in iRoom:
                     if room['NickName'] == searchName:
                         userName = room['UserName']
-                        print(room['NickName'])
-                        break
-                print(send_contents)
-                itchat.send_msg (send_contents, userName)
-                print(userName,'发送成功')
+                        # print(room['NickName'])
+                        # itchat.send_msg (send_contents, userName)
+                        print(room['NickName'],userName,'发送成功')
 
         # 单独测试
-        # if '相亲相爱' in one_name['NickName'] or '喜欢男神' in one_name['NickName']:
-        #     searchName = one_name['NickName']
+        # if '相亲相爱' in one_name or '喜欢男神' in one_name:
+        #     searchName = one_name
+        #     print(searchName)
         #     iRoom = itchat.search_chatrooms(searchName)
         #     for room in iRoom:
         #         if room['NickName'] == searchName:
@@ -65,9 +66,11 @@ def get_contents(path):
 
 if __name__ == '__main__':
     itchat.auto_login ()
+    # itchat.auto_login(hotReload=True)  # 首次扫描登录后后续自动登录
     path = 'data/chatrooms/chatrooms_contents.txt'
     # send_contents = get_contents(path)
-    sched_time = datetime.datetime (2018, 5, 1, 8, 00, 10)  # 设定初次触发事件的时间点
+    sched_time = datetime.datetime (2018, 5, 7, 8, 00, 10)  # 设定初次触发事件的时间点
     print(sched_time)
+    # send_contents = get_contents (path)
     # SentChatRoomsMsg(send_contents)
     timerfun(sched_time,path)
