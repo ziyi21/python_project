@@ -59,6 +59,7 @@ def get_movie(url):
             contents['movie_introduce_comments'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[4]/a').text.encode('gbk','ignore').decode('gbk')
         except:
             print('没有电影的介绍评论')
+            contents['movie_introduce_comments'] = None
         try:
             contents['movie_introduce_news'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[5]/a').text.encode('gbk','ignore').decode('gbk')
         except:
@@ -113,15 +114,18 @@ def get_movie(url):
     except:
         comments_url = None
 
-    if contents['movie_introduce_comments'] == '999+ 条影评':
-        driver.find_element_by_xpath ('//*[@id="movieNavigationRegion"]/dd[5]/a').click ()
-        print('bingo')
-        time.sleep (2)
-        driver.get(comments_url)
-        time.sleep(3)
-        contents['movie_long_comments'] = driver.find_element_by_xpath('/html/body/div[5]/div/div[1]/ul/li[1]/a').text.encode('gbk','ignore').decode('gbk').split('(')[-1].split(')')[0]
-        contents['movie_short_comments'] = driver.find_element_by_xpath ('//html/body/div[5]/div/div[1]/ul/li[2]/a').text.encode('gbk','ignore').decode('gbk').split('(')[-1].split(')')[0]
-        contents['movie_introduce_comments'] = int(contents['movie_short_comments'])+int(contents['movie_long_comments'])
+    try:
+        if contents['movie_introduce_comments'] == '999+ 条影评':
+            driver.find_element_by_xpath ('//*[@id="movieNavigationRegion"]/dd[5]/a').click ()
+            print('bingo')
+            time.sleep (2)
+            driver.get(comments_url)
+            time.sleep(3)
+            contents['movie_long_comments'] = driver.find_element_by_xpath('/html/body/div[5]/div/div[1]/ul/li[1]/a').text.encode('gbk','ignore').decode('gbk').split('(')[-1].split(')')[0]
+            contents['movie_short_comments'] = driver.find_element_by_xpath ('//html/body/div[5]/div/div[1]/ul/li[2]/a').text.encode('gbk','ignore').decode('gbk').split('(')[-1].split(')')[0]
+            contents['movie_introduce_comments'] = int(contents['movie_short_comments'])+int(contents['movie_long_comments'])
+    except:
+        pass
     print(contents)
     df = df.append(contents, ignore_index=True)
     return df,comments_url
@@ -338,19 +342,19 @@ if __name__ == '__main__':
         foldernames = '_'.join (i for i in movie_name_pinyin)
         save_info (contents, save_path, foldernames + now)
         # comments_url = 'http://movie.mtime.com/219107/comment.html'
-        if comments_url:
-            # 获取长影评并且完成存储
-            pages = long_comments_pages(comments_url)
-            long_comments, comment_content_url, writer_url = get_long_comments(comments_url, pages)
-            save_info(long_comments, save_path,foldernames+'_long_comments')
-            # 获取长影评的内容
-            # get_comments_content(comment_content_url)
-            # 获取用户的个人信息
-            # get_people_infor(writer_url)
-            # 获取短影评并且完成存储
-            short_pages = short_comments_pages(comments_url)
-            short_comments = get_short_comments(comments_url,short_pages)
-            save_info (short_comments, save_path, foldernames+'short_comments')
+        # if comments_url:
+        #     # 获取长影评并且完成存储
+        #     pages = long_comments_pages(comments_url)
+        #     long_comments, comment_content_url, writer_url = get_long_comments(comments_url, pages)
+        #     save_info(long_comments, save_path,foldernames+'_long_comments')
+        #     # 获取长影评的内容
+        #     # get_comments_content(comment_content_url)
+        #     # 获取用户的个人信息
+        #     # get_people_infor(writer_url)
+        #     # 获取短影评并且完成存储
+        #     short_pages = short_comments_pages(comments_url)
+        #     short_comments = get_short_comments(comments_url,short_pages)
+        #     save_info (short_comments, save_path, foldernames+'short_comments')
     # movie_name = '头号玩家'
     # url = 'http://search.mtime.com/search/?q={}'.format (movie_name)
     # driver = webdriver.Chrome (executable_path=r'D:\ksdler\chromedriver_win32_new\chromedriver')
