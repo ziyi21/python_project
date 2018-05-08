@@ -5,114 +5,51 @@ __author__ = 'ziyi'
 from selenium import webdriver
 import pandas as pd
 import time
-from pypinyin import lazy_pinyin
-import os
 
 def get_movie(url):
     df = pd.DataFrame({})
     contents = {}
     driver.get(url)
+    movie_url = driver.find_element_by_xpath('//*[@id="moreRegion"]/li/h3/a').get_attribute('href')
+    driver.find_element_by_xpath ('//*[@id="moreRegion"]/li/h3/a').click ()
+    print(movie_url)
+    driver.get(movie_url)
+    time.sleep(5)
+    contents['movie_name'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[1]/h1').text.encode('gbk','ignore').decode('gbk')
+    print(contents)
     try:
-        movie_url = driver.find_element_by_xpath('//*[@id="moreRegion"]/li/h3/a').get_attribute('href')
-        driver.find_element_by_xpath ('//*[@id="moreRegion"]/li/h3/a').click ()
-        print(movie_url)
-        driver.get(movie_url)
-        time.sleep(5)
+        contents['movie_english_name'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[1]/p[2]').text.encode('gbk','ignore').decode('gbk')
     except:
-        pass
-    try:
-        contents['movie_name'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[1]/h1').text.encode('gbk','ignore').decode('gbk')
-        print(contents)
-        try:
-            contents['movie_english_name'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[1]/p[2]').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print(contents['movie_name'],'没有英文名称')
-        try:
-            contents['movie_time'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[2]/span').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print('没有电影时间')
-        try:
-            movie_classes = driver.find_elements_by_xpath('//*[@id="db_head"]/div[2]/div/div[2]//a[@property="v:genre"]')
-            classes = []
-            for classify in movie_classes:
-                classes.append(classify.text.encode('gbk','ignore').decode('gbk'))
-            contents['movie_classify'] = ','.join(one for one in classes)
-        except:
-            print('没有电影类型')
-        try:
-            contents['movie_show_time'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[2]/a[last()]').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print('没有电影的上映时间')
-        try:
-            contents['movie_introduce_videos'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[1]/a').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print('没有电影的介绍视频')
-        try:
-            contents['movie_introduce_pictures'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[2]/a').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print('没有电影的介绍图片')
-        try:
-            contents['movie_introduce_actors'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[3]/a').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print('没有电影的介绍演员')
-        try:
-            contents['movie_introduce_comments'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[4]/a').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print('没有电影的介绍评论')
-        try:
-            contents['movie_introduce_news'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[5]/a').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print('没有电影的简介')
-        try:
-            contents['movie_scores'] = driver.find_element_by_xpath('//*[@id="ratingRegion"]/div[1]/b').text.encode('gbk','ignore').decode('gbk')
-            contents['movie_scores_total'] = driver.find_element_by_xpath('//*[@id="ratingRegion"]/div[1]/p').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print('没有电影的得分')
-        try:
-            contents['movie_income'] = driver.find_element_by_xpath('//*[@id="ratingRegion"]/div[2]/span').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print('没有电影的票房')
-        try:
-            contents['movie_cinema'] = driver.find_element_by_xpath ('//*[@id="descripRegion"]/div/div/div[1]/b[1]').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print('没有电影的得分')
-        try:
-            contents['movie_play_times'] = driver.find_element_by_xpath('//*[@id="descripRegion"]/div/div/div[1]/b[2]').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print('没有电影的播放次数')
-        try:
-            contents['movie_director'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[1]/a').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print ('没有电影的导演')
-        try:
-            contents['movie_scenarist'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[2]').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print ('没有电影的场景')
-        try:
-            contents['movie_country'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[3]/a').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print ('没有电影的城市')
-        try:
-            contents['movie_company'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[4]/a').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print ('没有电影的公司')
-        try:
-            driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dt/p[2]/a').click()
-            time.sleep(3)
-            contents['movie_introduction'] = driver.find_element_by_xpath('//*[@id="paragraphRegion"]/div/div[2]/div[2]/p[2]').text.encode('gbk','ignore').decode('gbk')
-        except:
-            print ('没有电影的介绍')
-    except Exception as e:
-        print(e)
+        print('没有英文名称')
+    contents['movie_time'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[2]/span').text.encode('gbk','ignore').decode('gbk')
+    movie_classes = driver.find_elements_by_xpath('//*[@id="db_head"]/div[2]/div/div[2]//a[@property="v:genre"]')
+    classes = []
+    for classify in movie_classes:
+        classes.append(classify.text.encode('gbk','ignore').decode('gbk'))
+    contents['movie_classify'] = ','.join(one for one in classes)
+    contents['movie_show_time'] = driver.find_element_by_xpath('//*[@id="db_head"]/div[2]/div/div[2]/a[last()]').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_introduce_videos'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[1]/a').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_introduce_pictures'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[2]/a').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_introduce_actors'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[3]/a').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_introduce_comments'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[4]/a').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_introduce_news'] = driver.find_element_by_xpath('//*[@id="movieNavigationRegion"]/dd[5]/a').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_scores'] = driver.find_element_by_xpath('//*[@id="ratingRegion"]/div[1]/b').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_scores_total'] = driver.find_element_by_xpath('//*[@id="ratingRegion"]/div[1]/p').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_income'] = driver.find_element_by_xpath('//*[@id="ratingRegion"]/div[2]/span').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_cinema'] = driver.find_element_by_xpath ('//*[@id="descripRegion"]/div/div/div[1]/b[1]').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_play_times'] = driver.find_element_by_xpath('//*[@id="descripRegion"]/div/div/div[1]/b[2]').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_director'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[1]/a').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_scenarist'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[2]').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_country'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[3]/a').text.encode('gbk','ignore').decode('gbk')
+    contents['movie_company'] = driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dd[4]/a').text.encode('gbk','ignore').decode('gbk')
+    driver.find_element_by_xpath('//*[@id="movie_warp"]/div[2]/div[3]/div/div[4]/div[2]/div[1]/div[2]/div[1]/dl/dt/p[2]/a').click()
+    time.sleep(3)
+    contents['movie_introduction'] = driver.find_element_by_xpath('//*[@id="paragraphRegion"]/div/div[2]/div[2]/p[2]').text.encode('gbk','ignore').decode('gbk')
     # '//*[@id="paragraphRegion"]/div/div[3]/div[2]/p[1]'
     # '//*[@id="paragraphRegion"]/div/div[4]/div[2]/p[1]'
     # '//*[@id="paragraphRegion"]/div/div[2]/div[2]/p[2]'
-    try:
-        comments_url = driver.find_element_by_xpath ('//*[@id="movieNavigationRegion"]/dd[5]/a').get_attribute('href')
-        print(comments_url)
-    except:
-        comments_url = None
-
+    comments_url = driver.find_element_by_xpath ('//*[@id="movieNavigationRegion"]/dd[5]/a').get_attribute('href')
+    print(comments_url)
     if contents['movie_introduce_comments'] == '999+ 条影评':
         driver.find_element_by_xpath ('//*[@id="movieNavigationRegion"]/dd[5]/a').click ()
         print('bingo')
@@ -289,75 +226,21 @@ def get_short_comments(comments_url,pages):
                 time.sleep(3)
     return df
 
-def create_foleder(foldernames):
-    current_position="data/movie/"
-    foldername=str(current_position)+str(foldernames)+"/"
-    isCreated=os.path.exists(foldername)
-    if not isCreated:
-        os.makedirs(foldername)
-        print(str(foldername)+'is created')
-        return foldername
-    else:
-        print("the folder has been created before")
-        return foldername
-
-def read_movies():
-    df = pd.read_csv ('data/movie/movie_list.csv', encoding='gbk')
-    movie_names = df['movie_name'].values.tolist()
-    # print(movie_names)
-    return movie_names
-
-def save_info(contents,foldername, name):
+def save_info(contents, name):
     df = pd.DataFrame()
     df = df.append(contents.copy())
-    df.to_csv(foldername+'{}.csv'.format(name), encoding='gbk',index=None)
+    df.to_csv(r'data\movie_thwj\{}.csv'.format(name), encoding='gbk',index=None)
+
 
 if __name__ == '__main__':
-    movie_names = read_movies()
-    for movie_name in movie_names:
-        url = 'http://search.mtime.com/search/?q={}'.format (movie_name)
-        driver = webdriver.Chrome (executable_path=r'D:\ksdler\chromedriver_win32_new\chromedriver')
-        # 获取某部影片的基本信息
-        contents, comments_url = get_movie (url)
-        now = time.strftime ('%Y-%m-%d', time.localtime (time.time ())).split (' ')[0]
-        movie_name_pinyin = lazy_pinyin (movie_name)
-        foldername = '_'.join (i for i in movie_name_pinyin)
-        save_path = create_foleder(foldername)
-        try:
-            movie_name_pinyin.remove (':')
-        except:
-            pass
-        try:
-            movie_name_pinyin.remove ('：')
-        except:
-            pass
-        try:
-            movie_name_pinyin.remove ('·')
-        except:
-            pass
-        foldernames = '_'.join (i for i in movie_name_pinyin)
-        save_info (contents, save_path, foldernames + now)
-        # comments_url = 'http://movie.mtime.com/219107/comment.html'
-        if comments_url:
-            # 获取长影评并且完成存储
-            pages = long_comments_pages(comments_url)
-            long_comments, comment_content_url, writer_url = get_long_comments(comments_url, pages)
-            save_info(long_comments, save_path,foldernames+'_long_comments')
-            # 获取长影评的内容
-            # get_comments_content(comment_content_url)
-            # 获取用户的个人信息
-            # get_people_infor(writer_url)
-            # 获取短影评并且完成存储
-            short_pages = short_comments_pages(comments_url)
-            short_comments = get_short_comments(comments_url,short_pages)
-            save_info (short_comments, save_path, foldernames+'short_comments')
-    # movie_name = '头号玩家'
-    # url = 'http://search.mtime.com/search/?q={}'.format (movie_name)
-    # driver = webdriver.Chrome (executable_path=r'D:\ksdler\chromedriver_win32_new\chromedriver')
-    # # 获取某部影片的基本信息
+    movie_name = '头号玩家'
+    url = 'http://search.mtime.com/search/?q={}'.format (movie_name)
+    driver = webdriver.Chrome (executable_path=r'D:\ksdler\chromedriver_win32_new\chromedriver')
+    # 获取某部影片的基本信息
     # contents, comments_url = get_movie(url)
     # now = time.strftime('%Y-%m-%d', time.localtime(time.time())).split(' ')[0]
     # save_info(contents,movie_name+now)
+
     # comments_url = 'http://movie.mtime.com/219107/comment.html'
     # 获取长影评并且完成存储
     # pages = long_comments_pages(comments_url)

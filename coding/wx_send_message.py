@@ -32,14 +32,16 @@ def SentChatRoomsMsg(send_contents):
         if '大数据' in name or '数据家' in name or '学习' in name or '交流' in name or '数据分析与应用' in name or '智新赋能' in name or '实习信息' in name: # or '优惠' in one_name
 
             if '公安' not in name and '栖霞' not in name and '哈希大数据'!= name.replace(' ' ,''):
+                print (name)
+
                 searchName = name
                 iRoom = itchat.search_chatrooms(searchName)
                 for room in iRoom:
                     if room['NickName'] == searchName:
                         userName = room['UserName']
-                        # print(room['NickName'])
-                        # itchat.send_msg (send_contents, userName)
-                        print(room['NickName'],userName,'发送成功')
+                        print(room['NickName'])
+                # itchat.send_msg (send_contents, userName)
+                        print(userName,'发送成功')
 
         # 单独测试
         # if '相亲相爱' in one_name or '喜欢男神' in one_name:
@@ -69,7 +71,7 @@ if __name__ == '__main__':
     # itchat.auto_login(hotReload=True)  # 首次扫描登录后后续自动登录
     path = 'data/chatrooms/chatrooms_contents.txt'
     # send_contents = get_contents(path)
-    sched_time = datetime.datetime (2018, 5, 7, 8, 00, 10)  # 设定初次触发事件的时间点
+    sched_time = datetime.datetime (2018, 5, 8, 8,00, 10)  # 设定初次触发事件的时间点
     print(sched_time)
     # send_contents = get_contents (path)
     # SentChatRoomsMsg(send_contents)
