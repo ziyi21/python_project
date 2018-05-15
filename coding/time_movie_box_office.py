@@ -38,19 +38,12 @@ def timerfun(sched_time,url_ori,movie_names) :
                 if index == 0:
                     time.sleep (5)
                     # save_info(contents, contents['movie_name'][0] + 'box_office')
+                    movie_name = movie_name.replace ('|', '')
+                    movie_name = movie_name.replace (':', '')
+                    movie_name = movie_name.replace ('：', '')
+                    movie_name = movie_name.replace ('.', '')
+                    movie_name = movie_name.replace (' ', '')
                     movie_name_pinyin = lazy_pinyin (movie_name)
-                    try:
-                        movie_name_pinyin.remove (':')
-                    except:
-                        pass
-                    try:
-                        movie_name_pinyin.remove ('：')
-                    except:
-                        pass
-                    try:
-                        movie_name_pinyin.remove ('·')
-                    except:
-                        pass
                     foldernames = '_'.join (i for i in movie_name_pinyin)
                     save_path = create_foleder (foldernames)
                     save_name =  foldernames + '_box_office'
@@ -61,25 +54,23 @@ def timerfun(sched_time,url_ori,movie_names) :
                 if index != 0 and len(contents) == 8:
                     time.sleep(5)
                     # save_info(contents, contents['movie_name'][0] + 'box_office')
+                    movie_name = movie_name.replace ('|', '')
+                    movie_name = movie_name.replace (':', '')
+                    movie_name = movie_name.replace ('：', '')
+                    movie_name = movie_name.replace ('.', '')
+                    movie_name = movie_name.replace (' ', '')
                     movie_name_pinyin = lazy_pinyin (movie_name)
-                    try:
-                        movie_name_pinyin.remove (':')
-                    except:
-                        pass
-                    try:
-                        movie_name_pinyin.remove ('：')
-                    except:
-                        pass
-                    try:
-                        movie_name_pinyin.remove ('·')
-                    except:
-                        pass
                     foldernames = '_'.join (i for i in movie_name_pinyin)
-                    save_path = create_foleder (foldernames)
-                    save_name = foldernames + '_box_office'
+                    try:
+                        save_path = create_foleder (foldernames)
+                        save_name = foldernames + '_box_office'
+                    except:
+                        save_name = None
+                        save_path = None
                     print(save_name)
-                    save_info (contents,save_name,save_path)
-                    print(now,save_path,'存储成功')
+                    if save_path and save_name:
+                        save_info (contents,save_name,save_path)
+                        print(now,save_path,'存储成功')
                     time.sleep(1)    # 每次判断间隔1s，避免多次触发事件
                 elif index != 0 and len(contents) < 8:
                     del movie_names[i]
@@ -175,3 +166,7 @@ if __name__ == '__main__':
     # save_info(contents,movie_name+'box_office')
     # movie_name = 'jinritoutiao'
     # create_foleder(movie_name)
+
+
+
+

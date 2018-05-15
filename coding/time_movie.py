@@ -320,27 +320,28 @@ if __name__ == '__main__':
     movie_names = read_movies()
     for movie_name in movie_names:
         url = 'http://search.mtime.com/search/?q={}'.format (movie_name)
+        # driver = webdriver.PhantomJS (executable_path=r'D:\anaconda python\phantomjs-2.1.1-windows\bin\phantomjs.exe')
         driver = webdriver.Chrome (executable_path=r'D:\ksdler\chromedriver_win32_new\chromedriver')
         # 获取某部影片的基本信息
         contents, comments_url = get_movie (url)
         now = time.strftime ('%Y-%m-%d', time.localtime (time.time ())).split (' ')[0]
+        movie_name = movie_name.replace('|','')
+        movie_name = movie_name.replace(':','')
+        movie_name = movie_name.replace('：','')
+        movie_name = movie_name.replace('.','')
+        movie_name = movie_name.replace(' ','')
         movie_name_pinyin = lazy_pinyin (movie_name)
-        foldername = '_'.join (i for i in movie_name_pinyin)
-        save_path = create_foleder(foldername)
-        try:
-            movie_name_pinyin.remove (':')
-        except:
-            pass
-        try:
-            movie_name_pinyin.remove ('：')
-        except:
-            pass
-        try:
-            movie_name_pinyin.remove ('·')
-        except:
-            pass
+        # foldername = '_'.join (i for i in movie_name_pinyin)
         foldernames = '_'.join (i for i in movie_name_pinyin)
-        save_info (contents, save_path, foldernames + now)
+
+        try:
+            save_path = create_foleder (foldernames)
+        except:
+            save_path = None
+        if save_path :
+            save_info (contents, save_path, foldernames + now)
+            print (now, save_path, '存储成功')
+
         # comments_url = 'http://movie.mtime.com/219107/comment.html'
         # if comments_url:
         #     # 获取长影评并且完成存储
@@ -355,6 +356,7 @@ if __name__ == '__main__':
         #     short_pages = short_comments_pages(comments_url)
         #     short_comments = get_short_comments(comments_url,short_pages)
         #     save_info (short_comments, save_path, foldernames+'short_comments')
+        driver.close()
     # movie_name = '头号玩家'
     # url = 'http://search.mtime.com/search/?q={}'.format (movie_name)
     # driver = webdriver.Chrome (executable_path=r'D:\ksdler\chromedriver_win32_new\chromedriver')
