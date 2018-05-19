@@ -5,6 +5,7 @@ import os
 from pypinyin import pinyin,lazy_pinyin
 import pandas as pd
 import time
+import re
 #
 # folder = 'data/movie/'
 # isCreated=os.path.exists(folder)
@@ -87,7 +88,10 @@ import time
 #                 comment_url = None
 #             if comment_url:
 #                 print('w')
-
-
-b = 1+1
-print(b)
+with open (r'data/3000027.txt', encoding='gbk') as f:
+    contents = f.readlines ()
+send_contents = ''.join (content.replace ('\xa0', '') for content in contents)
+# print(send_contents)
+count = len (re.findall ('。', send_contents)) + len (re.findall (';', send_contents)) + len (
+    re.findall ('，', send_contents)) + len (re.findall (',',send_contents)) + len (re.findall ('；', send_contents))
+print(count)

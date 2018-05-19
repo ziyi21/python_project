@@ -144,7 +144,6 @@ def handle_2013(list_2013):
                     # print('存在')
                     factors['thirdindex'] = int (i)
 
-
             print (index, factors)
             df = df.append (factors, ignore_index=True)
     # df.to_csv(r'data\index_2013.csv', encoding='gbk')
@@ -184,7 +183,6 @@ def handle_2014(list_2014):
                     # print(i,line.replace(' ',''),one)
                     factors['secondindex'] = int (i)
                     check = int(i)
-
 
                 if '三、董事会、监事会对会计师事务所本报告期“非标准审计报告”的说明' in line.replace (' ', ''):
                     # print('存在')
@@ -234,6 +232,8 @@ def handle_content(df):
         factors['filepath'] = df.iloc[i]['filepath']
         factors['filename'] = df.iloc[i]['filename']
         factors['filetime'] = df.iloc[i]['filetime']
+        # if '300020银江股份' in factors['filename']:
+        #     continue
         with open (factors['filepath'], 'r', encoding='utf8', errors='ignore') as f:
             first_factor = []
             second_factor = []
@@ -241,30 +241,44 @@ def handle_content(df):
             for j, line in enumerate (content):
                 # print(i,line)
                 # print (df.iloc[i]['firstindex'],df.iloc[i]['secondindex'], df.iloc[i]['thirdindex'])
-                if j >= int (df.iloc[i]['firstindex']) and j < int (df.iloc[i]['secondindex']):
-                    first_factor.append (line.replace (' ', '').encode('gbk', 'ignore').decode('gbk'))
+                if j >= int (df.iloc[i]['firstindex']) and j < int (df.iloc[i]['secondindex']) :
+                    first_factor.append (re.sub ('\d+.', '', line.replace (' ', '')).replace (r'/r/n', '').replace (r'/n', '').encode('gbk', 'ignore').decode ('gbk'))
                 if j >= int (df.iloc[i]['secondindex']) and j < int (df.iloc[i]['thirdindex']):
-                    second_factor.append (line.replace (' ', '').encode('gbk', 'ignore').decode('gbk'))
+                    second_factor.append (re.sub ('\d+.', '', line.replace (' ', '')).replace (r'/r/n', '').replace (r'/n', '').encode('gbk', 'ignore').decode ('gbk'))
             first_factors = ''.join (sentence for sentence in first_factor)
             second_factors = ''.join (sentence for sentence in second_factor)
             factors['firstfactor'] = first_factors
             factors['secondfactor'] = second_factors
-            factors['firstsentence'] = len (re.findall ('。', first_factors)) + len (re.findall (';', first_factors)) + len (re.findall ('；', first_factors))
-            factors['secondsentence'] = len (re.findall ('。', second_factors)) + len (re.findall (';', second_factors)) + len (re.findall ('；', second_factors))
-            print(i,factors)
+            factors['firstsentence'] = len (re.findall ('。', first_factors)) + len (re.findall (';', first_factors)) +len (re.findall ('，', first_factors)) + len (re.findall (',', first_factors)) + len (re.findall ('；', first_factors))
+            factors['secondsentence'] = len (re.findall ('。', second_factors)) + len (re.findall (';', second_factors)) + len (re.findall ('，', second_factors)) + len (re.findall (',', second_factors))+len (re.findall ('；', second_factors))
+            if len(first_factors)>30000:
+                factors['firstfactor'] = None
+            print(i,factors['secondsentence'],factors['firstsentence'],factors['filename'])
         # print(i,factors['firstsentence'],factors['secondsentence'],factors['filename'])
         df_content = df_content.append (factors, ignore_index=True)
-        df_content.to_csv (r'data\{}.csv'.format(df.iloc[1]['filetime']), encoding='gbk')
+        df_content.to_csv (r'data\{}_sentence.csv'.format(df.iloc[1]['filetime']), encoding='gbk')
     # # df_content.to_csv (r'data\2015.csv', encoding='gbk')
 
 
 if __name__ == '__main__':
     path = r'D:\辅助项目\15爬虫项目\9、胜男的数据分析\年报TXT'
-    list_2015, list_2014, list_2013 = read_pdf (path)
+    # list_2015, list_2014, list_2013 = read_pdf (path)
     # content_2015 = handle_2015 (list_2015)
     # handle_content (content_2015)
-    content_2013 = handle_2013 (list_2013)
-    handle_content (content_2013)
+    # content_2013 = handle_2013 (list_2013)
+    # handle_content (content_2013)
     # content_2014 = handle_2014 (list_2014)
     # handle_content(content_2014)
+
+    # # 整合多个csv文件内容
+    # concat_all = []
+    # years = [2013,2014,2015]
+    # for year in years:
+    #     one = pd.read_csv ('data\cut_words\{}_factors2.csv'.format(year),encoding='gbk')
+    #     concat_all.append(one)
+    # reports = pd.concat (concat_all)
+    # reports.to_csv('data/cut_words/company_factors2.csv',encoding='gbk')
+
+
+
 

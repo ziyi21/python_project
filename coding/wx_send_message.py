@@ -22,7 +22,7 @@ def SentChatRoomsMsg(send_contents):
     print(len(chatrooms))
     for one_name in chatrooms:
         name = one_name['NickName']
-        if '大数据' in name or '数据家' in name or '学习' in name or '交流' in name or '数据分析与应用' in name or '智新赋能' in name or '实习信息' in name or '高级研修' in name or '优惠' in name: # or '优惠' in name
+        if '大数据' in name or '数据家' in name or '学习' in name or '交流' in name or '数据分析与应用' in name or '智新赋能' in name or '实习信息' in name or '高级研修' in name : # or '优惠' in name
 
             if '公安' not in name and '栖霞' not in name and '哈希大数据'!= name.replace(' ' ,''):
                 print (name)
