@@ -1,103 +1,45 @@
+#!/usr/bin/python
+# -*- coding: utf-8 -*-
+__author__ = 'ziyi'
+
+from sklearn.datasets import make_regression
+import os
 import pandas as pd
 import re
+from sklearn import preprocessing
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split
 
+# content = pd.read_excel('data/cut_words/results/data.xlsx',encoding='gbk')
+# # ix 获取对应具体行列的具体内容，可以直接指定名称或者是填写索引
+# X = content.ix[:,['readability','depth','density','tone']]
+# y = content.ix[:,'ROE']
+# # print(X,y)
+# X_scaler = preprocessing.MinMaxScaler().fit_transform(X)
+# # X_scaler = min_max_scaler.fit_transform(X)
+# print(X_scaler)
+# # 拆分测试集和训练集
+# train_X , test_X, train_y , test_y = train_test_split(X, y, test_size=0.5,random_state=0)
+# # 训练多元线性回归模型
+# lr = LinearRegression().fit(train_X ,train_y)
+# # 预测测试集房价结果
+# predict_result_lr = lr.predict(test_X)
+# # print(predict_result_lr)
+#
+# # 计算预测的准确性
+# print('训练集模型准确率', lr.score(train_X, train_y))
+# print('测试集模型准确率', lr.score(test_X, test_y))
+# # print("最高房价值为：",np.max(price_y))
+# # print("最低房价值为：",np.min(price_y))
+# # print("房价的均值为",np.mean(price_y))
 
+X, y ,coefs= make_regression(n_samples=300, n_features=8, noise=0.2,coef=True,n_informative=7,bias=2)
+X_sample = pd.DataFrame(X)
+# X_sample.ix[]
+y_sample = pd.DataFrame(y,columns=['y'])
+coefs_sample = pd.DataFrame(coefs,columns=['coef'])
+table = pd.concat([X_sample,y_sample,coefs_sample],axis=1)
+print(coefs_sample)
 
-def handle_content(df):
-    df_content = pd.DataFrame ({})
-    factors = {}
-    for i in range (len (df)):
-        # factors['filepath'] = df.iloc[i]['filepath']
-        # factors['filename'] = df.iloc[i]['filename']
-        # factors['filetime'] = df.iloc[i]['filetime']
-        with open ('D:\\辅助项目\\15爬虫项目\\9、胜男的数据分析\\年报TXT\\\\300024机器人：2013年年度报告.txt', 'r', encoding='utf8', errors='ignore') as f:
-            first_factor = []
-            second_factor = []
-            content = f.readlines ()
-            for j, line in enumerate (content):
-                # print(i,line)
-                # print (df.iloc[i]['firstindex'],df.iloc[i]['secondindex'], df.iloc[i]['thirdindex'])
-                if j >= int (df.iloc[i]['firstindex']) and j < int (df.iloc[i]['secondindex']):
-                    first_factor.append (re.sub('\d+.','',line.replace (' ', '')).replace('\r\n','').replace('\n',''))
-                if j >= int (df.iloc[i]['secondindex']) and j < int (df.iloc[i]['thirdindex']):
-                    second_factor.append (line.replace (' ', ''))
-            # print(first_factor)
-            for mm in first_factor:
-                a = ''.join(mm)
-                print(a)
-            first_factors = ' '.join (sentence for sentence in first_factor)
-            second_factors = ' '.join (sentence for sentence in second_factor)
-            factors['firstfactor'] = first_factors
-
-            factors['secondfactor'] = second_factors
-            factors['firstsentence'] = len (re.findall ('。', first_factors)) + len (re.findall (';', first_factors)) + len (re.findall ('；', first_factors))
-            factors['secondsentence'] = len (re.findall ('。', second_factors)) + len (re.findall (';', second_factors)) + len (re.findall ('；', second_factors))
-            print(i,factors['firstfactor'],len(factors['firstfactor']))
-            # print(i,factors['firstfactor'])
-        # print(i,factors['firstsentence'],factors['secondsentence'],factors['filename'])
-        df_content = df_content.append (factors, ignore_index=True)
-        df_content.to_csv (r'data\test2.csv', encoding='gbk')
-
-
-factors = {}
-df = pd.DataFrame ({})
-with open ('D:\\辅助项目\\15爬虫项目\\9、胜男的数据分析\\年报TXT\\\\300020银江股份：2013年年度报告.txt', 'r', encoding='utf8',
-           errors='ignore') as f:
-    content = f.readlines ()
-    for i, line in enumerate (content):
-        # print(line)
-
-        if '第四节董事会报告' in line.replace (' ', '') and len (line.replace (' ', '')) < 10:
-            factors['firstindex'] = int (i)
-            print (int (i))
-
-        if '二、公司未来发展的展望' in line.replace (' ', '') and len (line.replace (' ', '')) < 13:
-            # print('m',m)
-            # print(i,line.replace(' ',''),one)
-            factors['secondindex'] = int (i)
-
-        if '公司未来发展的展望' in line.replace (' ', '') and len (line.replace (' ', '')) < 30:
-            # print('m',m)
-            # print(i,line.replace(' ',''),one)
-            factors['secondindex'] = int (i)
-
-        if '三、公司未来发展的展望' in line.replace (' ', '') and len (line.replace (' ', '')) < 13:
-            # print('m',m)
-            # print(i,line.replace(' ',''),one)
-            factors['secondindex'] = int (i)
-
-        if '三、董事会、监事会对会计师事务所本报告期“非标准审计报告”的说明' in line.replace (' ', ''):
-            # print('存在')
-            factors['thirdindex'] = int (i)
-        if '三、公司利润分配及分红派息情况' in line.replace (' ', ''):
-            # print('存在')
-            factors['thirdindex'] = int (i)
-        if '三、董事会关于报告期会计政策、会计估计变更或重要前期差错更正的说明' in line.replace (' ', ''):
-            # print('存在')
-            factors['thirdindex'] = int (i)
-        if '三、董事会对会计师事务所本报告期“非标准审计报告”的说明' in line.replace (' ', ''):
-            # print('存在')
-            factors['thirdindex'] = int (i)
-        if '三、报告期财务会计报告审计情况及会计政策、会计估计变更以及会计差错更正的说明' in line.replace (' ', ''):
-            # print('存在')
-            factors['thirdindex'] = int (i)
-
-        if '四、董事会、监事会对会计师事务所本报告期“非标准审计报告”的说明' in line.replace (' ', ''):
-            # print('存在')
-            factors['thirdindex'] = int (i)
-        if '四、公司利润分配及分红派息情况' in line.replace (' ', ''):
-            # print('存在')
-            factors['thirdindex'] = int (i)
-        if '四、董事会关于报告期会计政策、会计估计变更或重要前期差错更正的说明' in line.replace (' ', ''):
-            # print('存在')
-            factors['thirdindex'] = int (i)
-        if '四、董事会对会计师事务所本报告期“非标准审计报告”的说明' in line.replace (' ', ''):
-            # print('存在')
-            factors['thirdindex'] = int (i)
-        if '四、报告期财务会计报告审计情况及会计政策、会计估计变更以及会计差错更正的说明' in line.replace (' ', ''):
-            # print('存在')
-            factors['thirdindex'] = int (i)
-
-    print (factors)
-    df = df.append (factors, ignore_index=True)
-    handle_content (df)
+table_new = pd.DataFrame(table)
+table_new.to_csv(r'data\cut_words\regression2.csv',encoding='gbk')
