@@ -14,9 +14,9 @@ from selenium.webdriver.support import expected_conditions as EC
 import time
 from pyquery import PyQuery as pq
 from requests.exceptions import RequestException
-from faker import Factory #它可以生成很多模拟的数据，如user-agent
-f = Factory.create()
-headers = {'User-Agent': f.user_agent()}
+# from faker import Factory #它可以生成很多模拟的数据，如user-agent
+# f = Factory.create()
+# headers = {'User-Agent': f.user_agent()}
 
 
 def get_html(url):
