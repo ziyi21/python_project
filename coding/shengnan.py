@@ -241,7 +241,8 @@ def handle_content(df):
             for j, line in enumerate (content):
                 # print(i,line)
                 # print (df.iloc[i]['firstindex'],df.iloc[i]['secondindex'], df.iloc[i]['thirdindex'])
-                if j >= int (df.iloc[i]['firstindex']) and j < int (df.iloc[i]['secondindex']) :
+                if j >= int (df.iloc[i]['firstind'
+                                        ']) and j < int (df.iloc[i]['secondindex']) :
                     first_factor.append (re.sub ('\d+.', '', line.replace (' ', '')).replace (r'/r/n', '').replace (r'/n', '').encode('gbk', 'ignore').decode ('gbk'))
                 if j >= int (df.iloc[i]['secondindex']) and j < int (df.iloc[i]['thirdindex']):
                     second_factor.append (re.sub ('\d+.', '', line.replace (' ', '')).replace (r'/r/n', '').replace (r'/n', '').encode('gbk', 'ignore').decode ('gbk'))

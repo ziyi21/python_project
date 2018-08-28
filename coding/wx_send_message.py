@@ -39,20 +39,7 @@ def SentChatRoomsMsg(send_contents):
         # elif '哈希数据科技' in name:
         #     searchName = name
         #     iRoom = itchat.search_chatrooms (searchName)
-        #     for room in iRoom:
-        #         if room['NickName'] == searchName:
-        #             userName = room['UserName']
-        #             print (room['NickName'])
-        #             itchat.send_msg ('翔玉&老庄生日快乐哦', userName)
-        #             print (userName, '发送成功')
-
-        # 单独测试
-        # if '相亲相爱' in one_name or '喜欢男神' in one_name:3
-        #     searchName = one_name
-        #     print(searchName)
-        #     iRoom = itchat.search_chatrooms(searchName)
-        #     for room in iRoom:
-        #         if room['NickName'] == searchName:
+        #     for room in iRoom:lei ] == searchName:
         #             userName = room['UserName']
         #             break
         #     itchat.send_msg (send_contents, userName)
